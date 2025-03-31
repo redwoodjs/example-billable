@@ -1,4 +1,5 @@
-import type { User } from "@prisma/client";
+import type { AppContext } from "@/worker";
+
 import React from "react";
 import { link } from "../shared/links";
 
@@ -25,7 +26,7 @@ function Logo() {
   );
 }
 
-function Header({ user }: { user?: User }) {
+function Header({ user }: { user?: AppContext["user"] }) {
   return (
     <div className="px-8 py-4 flex justify-between items-center border-b">
       <a href="/">
@@ -47,7 +48,7 @@ export function Layout({
   appContext,
 }: {
   children: React.ReactNode;
-  appContext: { user?: User };
+  appContext: AppContext;
 }) {
   return (
     <div className="min-h-screen bg-white">
@@ -57,8 +58,8 @@ export function Layout({
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</div>
       </main>
 
-      <div className="px-8 py-4 flex justify-between items-center border-t">
-        Built with <a href="https://redwoodjs.com">RedwoodJS</a>
+      <div className="px-8 py-4 border-t">
+        Built with nostalgia in <a href="https://rwsdk.com">RedwoodSDK</a>
       </div>
     </div>
   );

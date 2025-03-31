@@ -1,20 +1,26 @@
 import { defineApp } from "@redwoodjs/sdk/worker";
-import { index, render, prefix } from "@redwoodjs/sdk/router";
-import type { ExecutionContext } from "@cloudflare/workers-types";
+import {
+  index,
+  render,
+  prefix,
+  type RouteOptions as RWSDKRouteOptions,
+} from "@redwoodjs/sdk/router";
 
-import { link } from "src/shared/links";
-import { Document } from "src/Document";
-import { authRoutes } from "src/pages/auth/routes";
-import { invoiceRoutes } from "src/pages/invoice/routes";
-import HomePage from "src/pages/Home/HomePage";
-import { db, setupDb } from "./db";
-import { sessions, setupSessionStore } from "./sessionStore";
+import { db, setupDb } from "@/db";
+import { sessions, setupSessionStore } from "@/sessionStore";
+export { SessionDO } from "@/session";
 
-export { SessionDO } from "./session";
+import { link } from "@/app/shared/links";
+import { Document } from "@/app/Document";
+import { HomePage } from "@/app/pages/Home";
+
+// import { authRoutes } from "src/pages/auth/routes";
+// import { invoiceRoutes } from "src/pages/invoice/routes";
 
 export type AppContext = {
   user: Awaited<ReturnType<typeof getUser>>;
 };
+export type RouteOptions = RWSDKRouteOptions<AppContext>;
 
 export const getUser = async (request: Request) => {
   try {
@@ -51,13 +57,9 @@ const app = defineApp<AppContext>([
       },
       HomePage,
     ]),
-    prefix("/user", authRoutes),
-    prefix("/invoice", invoiceRoutes),
+    // prefix("/user", authRoutes),
+    // prefix("/invoice", invoiceRoutes),
   ]),
 ]);
 
-export default {
-  fetch(request: Request, env: Env, cf: ExecutionContext) {
-    return app.fetch(request, env, cf);
-  },
-};
+export default app;

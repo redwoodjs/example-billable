@@ -1,20 +1,21 @@
 "use server";
 
 import { type Invoice } from "@prisma/client";
-import { db } from "src/db";
+import { db } from "@/db";
 import type { InvoiceItem, InvoiceTaxes } from "./InvoiceDetailPage";
+import { RouteOptions } from "@/worker";
 
 export async function saveInvoice(
   id: string,
   invoice: Omit<Invoice, "items" | "taxes">,
   items: InvoiceItem[],
   taxes: InvoiceTaxes[],
-  { appContext },
+  { appContext }: RouteOptions,
 ) {
   await db.invoice.findFirstOrThrow({
     where: {
       id,
-      userId: appContext.user.id,
+      userId: appContext?.user?.id,
     },
   });
 
@@ -34,11 +35,11 @@ export async function saveInvoice(
   });
 }
 
-export async function deleteLogo(id: string, { appContext }) {
+export async function deleteLogo(id: string, { appContext }: RouteOptions) {
   await db.invoice.findFirstOrThrow({
     where: {
       id,
-      userId: appContext.user.id,
+      userId: appContext?.user?.id,
     },
   });
 

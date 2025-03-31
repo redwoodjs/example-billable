@@ -1,7 +1,9 @@
-import { RouteOptions } from "@redwoodjs/sdk/worker";
-import { Layout } from "../Layout";
-import { InvoiceForm } from "../invoice/DetailPage/InvoiceForm";
-export default function HomePage({ appContext }: RouteOptions) {
+import { RouteOptions } from "@/worker";
+
+import { Layout } from "./Layout";
+import { InvoiceForm } from "./invoice/DetailPage/InvoiceForm";
+
+export function HomePage({ appContext }: RouteOptions) {
   return (
     <Layout appContext={appContext}>
       <InvoiceForm

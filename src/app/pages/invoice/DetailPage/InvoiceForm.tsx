@@ -1,6 +1,11 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
+import { toast, Toaster } from "sonner";
+
+import type { RouteOptions } from "@/worker";
+
 import {
   type InvoiceTaxes,
   type InvoiceItem,
@@ -8,14 +13,12 @@ import {
 } from "./InvoiceDetailPage";
 import { deleteLogo, saveInvoice } from "./functions";
 import { PrintPdf } from "./PrintToPdf";
-import { link } from "../../../shared/links";
-import { Button } from "src/components/ui/button";
-import { Input as OGInput } from "src/components/ui/input";
-import { Textarea as OGTextarea } from "src/components/ui/textarea";
-import { PlusIcon, Trash2Icon } from "lucide-react";
-import { cn } from "src/components/cn";
-import { toast, Toaster } from "sonner";
-import { RouteOptions } from "@redwoodjs/sdk/router";
+import { link } from "@/app/shared/links";
+import { Button } from "@/app/components/ui/button";
+import { Input as OGInput } from "@/app/components/ui/input";
+import { Textarea as OGTextarea } from "@/app/components/ui/textarea";
+
+import { cn } from "@/app/components/cn";
 
 function calculateSubtotal(items: InvoiceItem[]) {
   let sum = 0;

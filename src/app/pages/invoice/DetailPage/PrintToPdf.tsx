@@ -1,5 +1,5 @@
 import { useReactToPrint } from "react-to-print";
-import { Button } from "src/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 
 export function PrintPdf({
   contentRef,
