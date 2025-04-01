@@ -1,69 +1,70 @@
 {
-    // Schema reference
-    "$schema": "node_modules/wrangler/config-schema.json",
-  
-    // Worker name
-    "name": "billable",
-  
-    // Entry point
-    "main": "src/worker.tsx",
-    "routes": [
-        {
-            "pattern": "billable.me",
-            "custom_domain": true
-        }
-    ],
-  
-    // Compatibility settings
-    "compatibility_date": "2024-09-23",
-    "compatibility_flags": ["nodejs_compat"],
-  
-    // Assets configuration
-    "assets": {
-      "binding": "ASSETS"
-    },
-  
-    // Observability settings
-    "observability": {
-      "enabled": true
-    },
-  
-    // Durable Objects configuration
-    "durable_objects": {
-      "bindings": [
-        {
-          "name": "SESSION_DURABLE_OBJECT",
-          "class_name": "SessionDurableObject"
-        }
-      ]
-    },
-  
-    // Environment variables
-    "vars": {
-      "APP_URL": "https://billable.me"
-    },
-  
-    // Migrations configuration
-    "migrations": [
-      {
-        "tag": "v1",
-        "new_classes": ["SessionDurableObject"]
-      }
-    ],
-  
-    // D1 database configuration
-    "d1_databases": [
-      {
-        "binding": "DB",
-        "database_name": "billable",
-        "database_id": "2dde5875-59a9-46b4-b48a-a3198733a2d5"
-      }
-    ],
+  // Schema reference
+  "$schema": "node_modules/wrangler/config-schema.json",
 
-    "r2_buckets": [
-        {
-            "binding": "R2",
-            "bucket_name": "billable"
-        }
+  // Worker name
+  "name": "billable",
+
+  // Entry point
+  "main": "src/worker.tsx",
+  "routes": [
+    {
+      "pattern": "billable.me",
+      "custom_domain": true,
+    },
+  ],
+
+  // Compatibility settings
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Assets configuration
+  "assets": {
+    "binding": "ASSETS",
+  },
+
+  // Observability settings
+  "observability": {
+    "enabled": true,
+  },
+
+  // Durable Objects configuration
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SESSION_DURABLE_OBJECT",
+        "class_name": "SessionDurableObject",
+      },
     ],
-  }
+  },
+
+  // Environment variables
+  "vars": {
+    "APP_URL": "https://billable.me",
+    "APP_NAME": "billable",
+  },
+
+  // Migrations configuration
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["SessionDurableObject"],
+    },
+  ],
+
+  // D1 database configuration
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "billable",
+      "database_id": "2dde5875-59a9-46b4-b48a-a3198733a2d5",
+    },
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "billable",
+    },
+  ],
+}
