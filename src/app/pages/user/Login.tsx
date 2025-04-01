@@ -11,19 +11,15 @@ import {
   startPasskeyLogin,
   startPasskeyRegistration,
 } from "./functions";
-import { useTurnstile } from "@redwoodjs/sdk/turnstile";
 import { Layout } from "../Layout";
 import { Button } from "@/app/components/ui/button";
 import { RouteOptions } from "@/worker";
 import { Input } from "@/app/components/ui/input";
 
-const TURNSTILE_SITE_KEY = "0x4AAAAAABDVsW9C1Dp8W6xL";
-
 export function LoginPage({ appContext }: RouteOptions) {
   const [email, setEmail] = useState("peter.pistorius@gmail.com");
   const [result, setResult] = useState("");
   const [isPending, startTransition] = useTransition();
-  const turnstile = useTurnstile(TURNSTILE_SITE_KEY);
 
   const passkeyLogin = async () => {
     // 1. Get a challenge from the worker
@@ -53,16 +49,8 @@ export function LoginPage({ appContext }: RouteOptions) {
 
     console.log("registration", registration);
 
-    const turnstileToken = await turnstile.challenge();
-
-    console.log("turnstileToken", turnstileToken);
-
     // 3. Give the signed challenge to the worker to finish the registration process
-    const success = await finishPasskeyRegistration(
-      email,
-      registration,
-      turnstileToken,
-    );
+    const success = await finishPasskeyRegistration(email, registration);
 
     console.log("success", success);
 
@@ -83,7 +71,6 @@ export function LoginPage({ appContext }: RouteOptions) {
 
   return (
     <Layout appContext={appContext}>
-      <div ref={turnstile.ref} />
       <Input
         type="email"
         value={email}

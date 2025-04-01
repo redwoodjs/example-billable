@@ -41,57 +41,46 @@ export async function startPasskeyRegistration(
 export async function finishPasskeyRegistration(
   email: string,
   registration: RegistrationResponseJSON,
-  turnstileToken: string,
   opts?: HandlerOptions,
 ) {
-  console.log(opts);
-  // const { request, headers, env } = opts!;
+  const { request, headers, env } = opts!;
 
-  // if (
-  //   !(await verifyTurnstileToken({
-  //     token: turnstileToken,
-  //     secretKey: env.TURNSTILE_SECRET_KEY,
-  //   }))
-  // ) {
-  //   return false;
-  // }
+  const { origin } = new URL(request.url);
 
-  // const { origin } = new URL(request.url);
+  const session = await sessions.load(request);
+  const challenge = session?.challenge;
 
-  // const session = await sessions.load(request);
-  // const challenge = session?.challenge;
+  if (!challenge) {
+    return false;
+  }
 
-  // if (!challenge) {
-  //   return false;
-  // }
+  const verification = await verifyRegistrationResponse({
+    response: registration,
+    expectedChallenge: challenge,
+    expectedOrigin: origin,
+    expectedRPID: env.RP_ID,
+  });
 
-  // const verification = await verifyRegistrationResponse({
-  //   response: registration,
-  //   expectedChallenge: challenge,
-  //   expectedOrigin: origin,
-  //   expectedRPID: env.RP_ID,
-  // });
+  if (!verification.verified || !verification.registrationInfo) {
+    return false;
+  }
 
-  // if (!verification.verified || !verification.registrationInfo) {
-  //   return false;
-  // }
+  await sessions.save(headers, { challenge: null });
 
-  // await sessions.save(headers, { challenge: null });
+  const user = await db.user.create({
+    data: {
+      email,
+    },
+  });
 
-  // const user = await db.user.create({
-  //   data: {
-  //     email,
-  //   },
-  // });
-
-  // await db.credential.create({
-  //   data: {
-  //     userId: user.id,
-  //     credentialId: verification.registrationInfo.credential.id,
-  //     publicKey: verification.registrationInfo.credential.publicKey,
-  //     counter: verification.registrationInfo.credential.counter,
-  //   },
-  // });
+  await db.credential.create({
+    data: {
+      userId: user.id,
+      credentialId: verification.registrationInfo.credential.id,
+      publicKey: verification.registrationInfo.credential.publicKey,
+      counter: verification.registrationInfo.credential.counter,
+    },
+  });
 
   return true;
 }
