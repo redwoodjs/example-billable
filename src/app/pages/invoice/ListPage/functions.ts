@@ -1,15 +1,11 @@
 "use server";
 
-import { db } from "src/db";
-import { AppContext } from "../../../../worker";
+import { db } from "@/db";
+import { RouteOptions } from "@/worker";
 
 // We need to pass the context to these somehow?
-export async function createInvoice({
-  appContext,
-}: {
-  appContext: AppContext;
-}) {
-  const userId = appContext.user.id;
+export async function createInvoice({ appContext }: RouteOptions) {
+  const userId = appContext?.user?.id!;
 
   // todo(peterp, 28-01-2025): Implement templates.
   let lastInvoice = await db.invoice.findFirst({

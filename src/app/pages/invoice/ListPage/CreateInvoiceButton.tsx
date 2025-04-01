@@ -1,8 +1,9 @@
 "use client";
 
 import { useTransition } from "react";
+import { Button } from "@/app/components/ui/button";
+
 import { createInvoice } from "./functions";
-import { Button } from "src/components/ui/button";
 
 export function CreateInvoiceButton() {
   const [isPending, startTransition] = useTransition();

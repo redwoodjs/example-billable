@@ -1,17 +1,17 @@
 "use server";
 
-import { Layout } from "../../Layout";
+import { Layout } from "@/app/pages/Layout";
 
 import { InvoiceForm } from "./InvoiceForm";
-import { db } from "src/db";
-import { RouteOptions } from "@redwoodjs/sdk/router";
+import { db } from "@/db";
+import type { RouteOptions } from "@/worker";
 import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "src/components/ui/breadcrumb";
-import { link } from "src/shared/links";
+} from "@/app/components/ui/breadcrumb";
+import { link } from "@/app/shared/links";
 
 export type InvoiceItem = {
   description: string;
@@ -50,11 +50,8 @@ export async function getInvoice(id: string, userId: string) {
   };
 }
 
-export async function InvoiceDetailPage({
-  params,
-  appContext,
-}: RouteOptions<{ id: string }>) {
-  const invoice = await getInvoice(params.id, appContext.user.id);
+export async function InvoiceDetailPage({ params, appContext }: RouteOptions) {
+  const invoice = await getInvoice(params.id, appContext.user!.id);
 
   return (
     <Layout appContext={appContext}>

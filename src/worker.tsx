@@ -17,9 +17,7 @@ import { Document } from "@/app/Document";
 import { HomePage } from "@/app/pages/Home";
 
 import { userRoutes } from "@/app/pages/user/routes";
-
-// import { authRoutes } from "src/pages/auth/routes";
-// import { invoiceRoutes } from "src/pages/invoice/routes";
+import { invoiceRoutes } from "@/app/pages/invoice/routes";
 
 export type AppContext = {
   user?: Awaited<ReturnType<typeof getUser>>;
@@ -75,7 +73,7 @@ const app = defineApp<AppContext>([
       HomePage,
     ]),
     prefix("/user", userRoutes),
-    // prefix("/invoice", invoiceRoutes),
+    prefix("/invoice", invoiceRoutes),
   ]),
 ]);
 

@@ -1,14 +1,16 @@
-import { db } from "src/db";
 import { index, route } from "@redwoodjs/sdk/router";
+
+import { RouteOptions } from "@/worker";
+import { db } from "@/db";
+
 import { InvoiceDetailPage } from "./DetailPage/InvoiceDetailPage";
 import { InvoiceListPage } from "./ListPage/InvoiceListPage";
-import { link } from "src/shared/links";
 
-function isAuthenticated({ appContext }) {
+function isAuthenticated({ appContext }: RouteOptions) {
   if (!appContext.user) {
     return new Response(null, {
       status: 302,
-      headers: { Location: link("/") },
+      headers: { Location: "/" },
     });
   }
 }
@@ -40,7 +42,7 @@ export const invoiceRoutes = [
       const file = formData.get("file") as File;
 
       // Stream the file directly to R2
-      const r2ObjectKey = `/invoice/logos/${appContext.user.id}/${params.id}-${Date.now()}-${file.name}`;
+      const r2ObjectKey = `/invoice/logos/${appContext?.user?.id}/${params.id}-${Date.now()}-${file.name}`;
       await env.R2.put(r2ObjectKey, file.stream(), {
         httpMetadata: {
           contentType: file.type,

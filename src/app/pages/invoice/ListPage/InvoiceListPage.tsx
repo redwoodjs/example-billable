@@ -1,11 +1,11 @@
 "use server";
 
-import { Layout } from "../../Layout";
+import { Layout } from "@/app/pages/Layout";
 
 import { CreateInvoiceButton } from "./CreateInvoiceButton";
-import { db } from "src/db";
-import { RouteOptions } from "@redwoodjs/sdk/router";
-import { link } from "src/shared/links";
+import { db } from "@/db";
+
+import { link } from "@/app/shared/links";
 
 import {
   Table,
@@ -15,7 +15,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "src/components/ui/table";
+} from "@/app/components/ui/table";
+import { RouteOptions } from "@/worker";
 
 export type InvoiceItem = {
   description: string;
@@ -59,7 +60,9 @@ async function getInvoiceListSummary(userId: string) {
 }
 
 export async function InvoiceListPage({ appContext }: RouteOptions) {
-  const invoices = await getInvoiceListSummary(appContext.user.id);
+  const user = appContext.user!;
+
+  const invoices = await getInvoiceListSummary(user.id);
   return (
     <Layout appContext={appContext}>
       <div className="space-y-2 py-4 text-right">
