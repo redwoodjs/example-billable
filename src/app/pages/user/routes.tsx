@@ -4,8 +4,7 @@ import { sessions } from "@/session/store";
 
 export const userRoutes = [
   route("/login", LoginPage),
-  route("/logout", async function ({ request }) {
-    const headers = new Headers();
+  route("/logout", async function ({ request, headers }) {
     await sessions.remove(request, headers);
     headers.set("Location", "/");
 

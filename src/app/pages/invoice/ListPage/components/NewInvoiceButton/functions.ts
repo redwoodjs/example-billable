@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { RouteOptions } from "@/worker";
 
 // We need to pass the context to these somehow?
-export async function createInvoice({ appContext }: RouteOptions) {
+export async function newInvoice({ appContext }: RouteOptions) {
   const userId = appContext?.user?.id!;
 
   // todo(peterp, 28-01-2025): Implement templates.

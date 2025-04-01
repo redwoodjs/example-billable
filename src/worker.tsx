@@ -64,6 +64,7 @@ const app = defineApp<AppContext>([
     index([
       ({ appContext }) => {
         if (appContext.user) {
+          console.log("redirecting to invoice list");
           return new Response(null, {
             status: 302,
             headers: { Location: link("/invoice/list") },

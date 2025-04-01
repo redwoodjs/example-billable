@@ -1,4 +1,7 @@
 "use server";
+
+import { verifyTurnstileToken } from "@redwoodjs/sdk/turnstile";
+
 import {
   generateRegistrationOptions,
   generateAuthenticationOptions,
@@ -11,10 +14,18 @@ import {
 import { sessions } from "@/session/store";
 import { HandlerOptions } from "@redwoodjs/sdk/router";
 import { db } from "@/db";
-import { verifyTurnstileToken } from "@redwoodjs/sdk/turnstile";
+
+export async function validateEmailAddress(email: string) {
+  const user = await db.user.findUnique({ where: { email } });
+  if (user) {
+    return [false, "Email address already exists"];
+  } else {
+    return [true, ""];
+  }
+}
 
 export async function startPasskeyRegistration(
-  username: string,
+  email: string,
   opts?: HandlerOptions,
 ) {
   const { headers, env } = opts!;
@@ -22,16 +33,14 @@ export async function startPasskeyRegistration(
   const options = await generateRegistrationOptions({
     rpName: env.APP_NAME,
     rpID: env.RP_ID,
-    userName: username,
+    userName: email,
     authenticatorSelection: {
-      // Require the authenticator to store the credential, enabling a username-less login experience
       residentKey: "required",
-      // Prefer user verification (biometric, PIN, etc.), but allow authentication even if it's not available
       userVerification: "preferred",
     },
   });
 
-  console.log(options);
+  console.log("options function", options);
 
   await sessions.save(headers, { challenge: options.challenge });
 

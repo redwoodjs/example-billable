@@ -2,7 +2,7 @@
 
 import { Layout } from "@/app/pages/Layout";
 
-import { CreateInvoiceButton } from "./CreateInvoiceButton";
+import { NewInvoiceButton } from "./components/NewInvoiceButton";
 import { db } from "@/db";
 
 import { link } from "@/app/shared/links";
@@ -66,7 +66,7 @@ export async function InvoiceListPage({ appContext }: RouteOptions) {
   return (
     <Layout appContext={appContext}>
       <div className="space-y-2 py-4 text-right">
-        <CreateInvoiceButton />
+        <NewInvoiceButton />
       </div>
 
       <Table>

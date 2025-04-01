@@ -10,6 +10,7 @@ import {
   finishPasskeyRegistration,
   startPasskeyLogin,
   startPasskeyRegistration,
+  validateEmailAddress,
 } from "./functions";
 import { Layout } from "../Layout";
 import { Button } from "@/app/components/ui/button";
@@ -36,29 +37,35 @@ export function LoginPage({ appContext }: RouteOptions) {
     } else {
       setResult("Login successful!");
     }
+
+    // redirect to invoice list
   };
 
   const passkeyRegister = async () => {
+    const [valid, message] = await validateEmailAddress(email);
+    if (!valid) {
+      setResult(message as string);
+      return;
+    }
+
     // 1. Get a challenge from the worker
     const options = await startPasskeyRegistration(email);
-
     console.log("options", options);
 
     // 2. Ask the browser to sign the challenge
     const registration = await startRegistration({ optionsJSON: options });
-
     console.log("registration", registration);
 
     // 3. Give the signed challenge to the worker to finish the registration process
     const success = await finishPasskeyRegistration(email, registration);
-
     console.log("success", success);
-
     if (!success) {
       setResult("Registration failed");
     } else {
       setResult("Registration successful!");
     }
+
+    // redirect to invoice list
   };
 
   const handlePerformPasskeyLogin = () => {

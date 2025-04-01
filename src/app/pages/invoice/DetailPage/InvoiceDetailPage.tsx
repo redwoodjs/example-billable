@@ -58,10 +58,10 @@ export async function InvoiceDetailPage({ params, appContext }: RouteOptions) {
       <BreadcrumbList>
         <BreadcrumbLink href={link("/invoice/list")}>Invoices</BreadcrumbLink>
         <BreadcrumbSeparator />
+
         <BreadcrumbPage>Edit Invoice</BreadcrumbPage>
       </BreadcrumbList>
-
-      <InvoiceForm invoice={invoice} appContext={appContext} />
+      <InvoiceForm invoice={invoice} appContext={appContext} /> */
     </Layout>
   );
 }

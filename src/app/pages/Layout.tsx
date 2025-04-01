@@ -1,7 +1,6 @@
 import type { AppContext } from "@/worker";
 
-import React from "react";
-import { link } from "../shared/links";
+import { link } from "@/app/shared/links";
 
 function Logo() {
   return (
@@ -59,7 +58,8 @@ export function Layout({
       </main>
 
       <div className="px-8 py-4 border-t">
-        Built with nostalgia in <a href="https://rwsdk.com">RedwoodSDK</a>
+        Personal software with{" "}
+        <a href="https://rwsdk.com/personal-software">RedwoodSDK</a>
       </div>
     </div>
   );

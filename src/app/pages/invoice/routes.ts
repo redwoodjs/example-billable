@@ -3,11 +3,12 @@ import { index, route } from "@redwoodjs/sdk/router";
 import { RouteOptions } from "@/worker";
 import { db } from "@/db";
 
-import { InvoiceDetailPage } from "./DetailPage/InvoiceDetailPage";
 import { InvoiceListPage } from "./ListPage/InvoiceListPage";
+import { InvoiceDetailPage } from "./DetailPage/InvoiceDetailPage";
 
 function isAuthenticated({ appContext }: RouteOptions) {
   if (!appContext.user) {
+    console.log("User is not logged in");
     return new Response(null, {
       status: 302,
       headers: { Location: "/" },
@@ -36,7 +37,6 @@ export const invoiceRoutes = [
       ) {
         return new Response("Method not allowed", { status: 405 });
       }
-      // todo get userId from context.
 
       const formData = await request.formData();
       const file = formData.get("file") as File;
