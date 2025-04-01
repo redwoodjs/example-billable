@@ -15,12 +15,12 @@ import { useTurnstile } from "@redwoodjs/sdk/turnstile";
 import { Layout } from "../Layout";
 import { Button } from "@/app/components/ui/button";
 import { RouteOptions } from "@/worker";
+import { Input } from "@/app/components/ui/input";
 
-// >>> Replace this with your own Cloudflare Turnstile site key
-const TURNSTILE_SITE_KEY = "1x00000000000000000000AA";
+const TURNSTILE_SITE_KEY = "0x4AAAAAABDVsW9C1Dp8W6xL";
 
 export function LoginPage({ appContext }: RouteOptions) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("peter.pistorius@gmail.com");
   const [result, setResult] = useState("");
   const [isPending, startTransition] = useTransition();
   const turnstile = useTurnstile(TURNSTILE_SITE_KEY);
@@ -44,19 +44,27 @@ export function LoginPage({ appContext }: RouteOptions) {
 
   const passkeyRegister = async () => {
     // 1. Get a challenge from the worker
-    const options = await startPasskeyRegistration(username);
+    const options = await startPasskeyRegistration(email);
+
+    console.log("options", options);
 
     // 2. Ask the browser to sign the challenge
     const registration = await startRegistration({ optionsJSON: options });
 
+    console.log("registration", registration);
+
     const turnstileToken = await turnstile.challenge();
+
+    console.log("turnstileToken", turnstileToken);
 
     // 3. Give the signed challenge to the worker to finish the registration process
     const success = await finishPasskeyRegistration(
-      username,
+      email,
       registration,
       turnstileToken,
     );
+
+    console.log("success", success);
 
     if (!success) {
       setResult("Registration failed");
@@ -76,15 +84,16 @@ export function LoginPage({ appContext }: RouteOptions) {
   return (
     <Layout appContext={appContext}>
       <div ref={turnstile.ref} />
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
+      <Input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
       />
+      <br />
       <Button onClick={handlePerformPasskeyLogin} disabled={isPending}>
         {isPending ? <>...</> : "Login"}
-      </Button>
+      </Button>{" "}
       <Button onClick={handlePerformPasskeyRegister} disabled={isPending}>
         {isPending ? <>...</> : "Register"}
       </Button>
