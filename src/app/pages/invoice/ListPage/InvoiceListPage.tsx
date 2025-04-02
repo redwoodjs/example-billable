@@ -72,7 +72,7 @@ export async function InvoiceListPage({ appContext }: RouteOptions) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Invoice</TableHead>
+            <TableHead>Invoice #</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Customer</TableHead>
             <TableHead></TableHead>

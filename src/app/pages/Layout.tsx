@@ -58,7 +58,7 @@ export function Layout({
       </main>
 
       <div className="px-8 py-4 border-t">
-        Personal software with{" "}
+        Crafted with{" "}
         <a href="https://rwsdk.com/personal-software">RedwoodSDK</a>
       </div>
     </div>
