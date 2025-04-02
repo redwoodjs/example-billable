@@ -61,7 +61,7 @@ export async function InvoiceDetailPage({ params, appContext }: RouteOptions) {
 
         <BreadcrumbPage>Edit Invoice</BreadcrumbPage>
       </BreadcrumbList>
-      <InvoiceForm invoice={invoice} appContext={appContext} /> */
+      <InvoiceForm invoice={invoice} appContext={appContext} />
     </Layout>
   );
 }

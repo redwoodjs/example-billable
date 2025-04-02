@@ -2,16 +2,23 @@
 
 import { type Invoice } from "@prisma/client";
 import { db } from "@/db";
-import type { InvoiceItem, InvoiceTaxes } from "./InvoiceDetailPage";
+import type {
+  InvoiceItem,
+  InvoiceLabels,
+  InvoiceTaxes,
+} from "./InvoiceDetailPage";
 import { RouteOptions } from "@/worker";
 
 export async function saveInvoice(
   id: string,
-  invoice: Omit<Invoice, "items" | "taxes">,
+  invoice: Omit<Invoice, "items" | "taxes" | "labels">,
+  labels: InvoiceLabels,
   items: InvoiceItem[],
   taxes: InvoiceTaxes[],
-  { appContext }: RouteOptions,
+  opts?: RouteOptions,
 ) {
+  const { appContext } = opts!;
+
   await db.invoice.findFirstOrThrow({
     where: {
       id,
@@ -23,7 +30,7 @@ export async function saveInvoice(
     ...invoice,
     items: JSON.stringify(items),
     taxes: JSON.stringify(taxes),
-    labels: JSON.stringify(invoice.labels),
+    labels: JSON.stringify(labels),
   };
 
   await db.invoice.upsert({
@@ -35,7 +42,9 @@ export async function saveInvoice(
   });
 }
 
-export async function deleteLogo(id: string, { appContext }: RouteOptions) {
+export async function deleteLogo(id: string, opts?: RouteOptions) {
+  const { appContext } = opts!;
+
   await db.invoice.findFirstOrThrow({
     where: {
       id,

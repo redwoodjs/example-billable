@@ -8,6 +8,9 @@ export function HomePage({ appContext }: RouteOptions) {
     <Layout appContext={appContext}>
       <InvoiceForm
         invoice={{
+          id: "new",
+          title: "INVOICE",
+          number: "1",
           items: [
             {
               description: "",
@@ -16,9 +19,27 @@ export function HomePage({ appContext }: RouteOptions) {
             },
           ],
           taxes: [],
-          labels: {},
+          labels: {
+            invoiceNumber: "",
+            invoiceDate: "",
+            itemDescription: "",
+            itemQuantity: "",
+            itemPrice: "",
+            total: "",
+            subtotal: "",
+          },
           date: new Date(),
-          invoiceNumber: "1",
+          status: "draft",
+          userId: appContext.user?.id ?? "",
+          supplierName: "",
+          supplierContact: "",
+          supplierLogo: null,
+          customer: "",
+          currency: "$",
+          notesA: "",
+          notesB: "",
+          createdAt: new Date(),
+          updatedAt: null,
         }}
         appContext={appContext}
       />

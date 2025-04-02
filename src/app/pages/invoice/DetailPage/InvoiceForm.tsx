@@ -50,7 +50,7 @@ export function InvoiceForm(props: {
 
   const pdfContentRef = useRef<HTMLDivElement>(null);
 
-  const isLoggedIn = props.appContext?.user;
+  const isLoggedIn = props.appContext?.user !== null;
 
   return (
     <div>
@@ -60,7 +60,13 @@ export function InvoiceForm(props: {
         <Button
           onClick={async () => {
             if (isLoggedIn) {
-              await saveInvoice(invoice.id, invoice, items, taxes);
+              await saveInvoice(
+                invoice.id,
+                invoice,
+                invoice.labels,
+                items,
+                taxes,
+              );
               window.location.href = link("/invoice/list");
             } else {
               toast.error("You must be logged in to save an invoice");
