@@ -7,6 +7,9 @@
 
   // Entry point
   "main": "src/worker.tsx",
+  "placement": {
+    "mode": "smart",
+  },
   "routes": [
     {
       "pattern": "billable.me",
@@ -57,7 +60,7 @@
     {
       "binding": "DB",
       "database_name": "billable",
-      "database_id": "2dde5875-59a9-46b4-b48a-a3198733a2d5",
+      "database_id": "f8d1a283-8c96-4df3-ae89-675ed7d47aa1",
     },
   ],
 
