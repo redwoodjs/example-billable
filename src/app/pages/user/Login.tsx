@@ -18,7 +18,7 @@ import { RouteOptions } from "@/worker";
 import { Input } from "@/app/components/ui/input";
 
 export function LoginPage({ appContext }: RouteOptions) {
-  const [email, setEmail] = useState("peter.pistorius@gmail.com");
+  const [email, setEmail] = useState("");
   const [result, setResult] = useState("");
   const [isPending, startTransition] = useTransition();
 
