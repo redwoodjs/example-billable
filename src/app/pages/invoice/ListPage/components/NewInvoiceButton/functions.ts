@@ -1,10 +1,11 @@
 "use server";
 
 import { db } from "@/db";
-import { RouteOptions } from "@/worker";
+import { requestInfo } from "@redwoodjs/sdk/worker";
 
-export async function newInvoice(opts?: RouteOptions) {
-  const userId = opts?.appContext?.user?.id!;
+export async function newInvoice() {
+  const { ctx } = requestInfo;
+  const userId = ctx.user?.id!;
 
   // todo(peterp, 28-01-2025): Implement templates.
   let lastInvoice = await db.invoice.findFirst({

@@ -3,14 +3,9 @@
 import { useState, useRef } from "react";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { toast, Toaster } from "sonner";
+import type { RequestInfo } from "@redwoodjs/sdk/worker";
 
-import type { RouteOptions } from "@/worker";
-
-import {
-  type InvoiceTaxes,
-  type InvoiceItem,
-  type getInvoice,
-} from "./InvoiceDetailPage";
+import { type InvoiceTaxes, type InvoiceItem } from "./InvoiceDetailPage";
 import { deleteLogo, saveInvoice } from "./functions";
 import { PrintPdf } from "./PrintToPdf";
 import { link } from "@/app/shared/links";
@@ -36,9 +31,38 @@ function calculateTaxes(subtotal: number, taxes: InvoiceTaxes[]) {
   return sum;
 }
 
+export type Invoice = {
+  id: string;
+  title: string;
+  number: string;
+  items: InvoiceItem[];
+  taxes: InvoiceTaxes[];
+  labels: {
+    invoiceNumber: string;
+    invoiceDate: string;
+    itemDescription: string;
+    itemQuantity: string;
+    itemPrice: string;
+    total: string;
+    subtotal: string;
+  };
+  date: Date;
+  status: string;
+  userId: string;
+  supplierName: string;
+  supplierContact: string | null;
+  supplierLogo: string | null;
+  customer: string;
+  currency: string;
+  notesA: string;
+  notesB: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+};
+
 export function InvoiceForm(props: {
-  invoice: Awaited<ReturnType<typeof getInvoice>>;
-  appContext: RouteOptions["appContext"];
+  invoice: Invoice;
+  ctx: RequestInfo["ctx"];
 }) {
   const [invoice, setInvoice] = useState(props.invoice);
   const [items, setItems] = useState(props.invoice.items);
@@ -50,7 +74,7 @@ export function InvoiceForm(props: {
 
   const pdfContentRef = useRef<HTMLDivElement>(null);
 
-  const isLoggedIn = props.appContext?.user !== null;
+  const isLoggedIn = props.ctx?.user !== null;
 
   return (
     <div>
@@ -65,7 +89,7 @@ export function InvoiceForm(props: {
                 invoice,
                 invoice.labels,
                 items,
-                taxes,
+                taxes
               );
               window.location.href = link("/invoice/list");
             } else {
@@ -382,10 +406,8 @@ function Item({
   onChange,
   onDelete,
 }: {
-  item: Awaited<ReturnType<typeof getInvoice>>["items"][number];
-  onChange: (
-    item: Awaited<ReturnType<typeof getInvoice>>["items"][number],
-  ) => void;
+  item: InvoiceItem;
+  onChange: (item: InvoiceItem) => void;
   onDelete: () => void;
 }) {
   return (
@@ -428,11 +450,8 @@ function Item({
 
 function Taxes(props: {
   subtotal: number;
-  taxes: Awaited<ReturnType<typeof getInvoice>>["taxes"];
-  onChange: (
-    tax: Awaited<ReturnType<typeof getInvoice>>["taxes"][0],
-    index: number,
-  ) => void;
+  taxes: InvoiceTaxes[];
+  onChange: (tax: InvoiceTaxes, index: number) => void;
   onDelete: (index: number) => void;
   onAdd: () => void;
 }) {
@@ -460,7 +479,7 @@ function Taxes(props: {
               onChange={(e) =>
                 props.onChange(
                   { ...tax, amount: Number(e.target.value) / 100 },
-                  index,
+                  index
                 )
               }
             />
@@ -499,8 +518,8 @@ function SupplierName({
   setInvoice,
   isLoggedIn,
 }: {
-  invoice: Awaited<ReturnType<typeof getInvoice>>;
-  setInvoice: (invoice: Awaited<ReturnType<typeof getInvoice>>) => void;
+  invoice: Invoice;
+  setInvoice: (invoice: Invoice) => void;
   isLoggedIn: boolean;
 }) {
   if (invoice.supplierLogo) {
@@ -574,7 +593,7 @@ function UploadLogo({
               {
                 method: "POST",
                 body: formData,
-              },
+              }
             );
 
             if (!response.ok) {
@@ -597,7 +616,7 @@ function Input(props: React.ComponentProps<typeof OGInput>) {
       {...props}
       className={cn(
         "border-none shadow-none rounded-none p-2",
-        props.className,
+        props.className
       )}
     />
   );
@@ -609,7 +628,7 @@ function Textarea(props: React.ComponentProps<typeof OGTextarea>) {
       {...props}
       className={cn(
         "border-none shadow-none rounded-none p-2 min-h-[100px] resize-none overflow-hidden",
-        props.className,
+        props.className
       )}
       onInput={(e) => {
         const target = e.currentTarget;

@@ -1,13 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./src/app/**/*.{ts,tsx}",
-    "./src/components/**/*.{ts,tsx}",
-  ],
+  content: ["./src/app/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        border: "#333",
+        border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -41,8 +38,8 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         screens: {
-          print: { raw: 'print' },
-        }
+          print: { raw: "print" },
+        },
       },
       borderRadius: {
         lg: `var(--radius)`,
@@ -61,4 +58,4 @@ export default {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};

@@ -1,11 +1,11 @@
-import { RouteOptions } from "@/worker";
+import type { RequestInfo } from "@redwoodjs/sdk/worker";
 
 import { Layout } from "./Layout";
 import { InvoiceForm } from "./invoice/DetailPage/InvoiceForm";
 
-export function HomePage({ appContext }: RouteOptions) {
+export function HomePage({ ctx }: RequestInfo) {
   return (
-    <Layout appContext={appContext}>
+    <Layout ctx={ctx}>
       <InvoiceForm
         invoice={{
           id: "new",
@@ -30,7 +30,7 @@ export function HomePage({ appContext }: RouteOptions) {
           },
           date: new Date(),
           status: "draft",
-          userId: appContext.user?.id ?? "",
+          userId: ctx.user?.id ?? "",
           supplierName: "",
           supplierContact: "",
           supplierLogo: null,
@@ -41,7 +41,7 @@ export function HomePage({ appContext }: RouteOptions) {
           createdAt: new Date(),
           updatedAt: null,
         }}
-        appContext={appContext}
+        ctx={ctx}
       />
     </Layout>
   );

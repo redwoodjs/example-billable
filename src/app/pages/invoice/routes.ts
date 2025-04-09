@@ -1,13 +1,14 @@
 import { index, route } from "@redwoodjs/sdk/router";
+import type { RequestInfo } from "@redwoodjs/sdk/worker";
+import { env } from "cloudflare:workers";
 
-import { RouteOptions } from "@/worker";
 import { db } from "@/db";
 
 import { InvoiceListPage } from "./ListPage/InvoiceListPage";
 import { InvoiceDetailPage } from "./DetailPage/InvoiceDetailPage";
 
-function isAuthenticated({ appContext }: RouteOptions) {
-  if (!appContext.user) {
+function isAuthenticated({ ctx }: RequestInfo) {
+  if (!ctx.user) {
     console.log("User is not logged in");
     return new Response(null, {
       status: 302,
@@ -30,7 +31,7 @@ export const invoiceRoutes = [
   route("/:id", [isAuthenticated, InvoiceDetailPage]),
   route("/:id/upload", [
     isAuthenticated,
-    async ({ request, params, env, appContext }) => {
+    async ({ request, params, ctx }) => {
       if (
         request.method !== "POST" &&
         !request.headers.get("content-type")?.includes("multipart/form-data")
@@ -42,7 +43,9 @@ export const invoiceRoutes = [
       const file = formData.get("file") as File;
 
       // Stream the file directly to R2
-      const r2ObjectKey = `/invoice/logos/${appContext?.user?.id}/${params.id}-${Date.now()}-${file.name}`;
+      const r2ObjectKey = `/invoice/logos/${ctx?.user?.id}/${
+        params.id
+      }-${Date.now()}-${file.name}`;
       await env.R2.put(r2ObjectKey, file.stream(), {
         httpMetadata: {
           contentType: file.type,
@@ -66,7 +69,7 @@ export const invoiceRoutes = [
   ]),
   route("/logos/*", [
     isAuthenticated,
-    async ({ params, env }) => {
+    async ({ params }) => {
       const object = await env.R2.get("/invoice/logos/" + params.$0);
       if (object === null) {
         return new Response("Object Not Found", { status: 404 });

@@ -1,6 +1,7 @@
 "use server";
 
 import { Layout } from "@/app/pages/Layout";
+import type { RequestInfo } from "@redwoodjs/sdk/worker";
 
 import { NewInvoiceButton } from "./components/NewInvoiceButton";
 import { db } from "@/db";
@@ -16,7 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/components/ui/table";
-import { RouteOptions } from "@/worker";
 
 export type InvoiceItem = {
   description: string;
@@ -59,12 +59,12 @@ async function getInvoiceListSummary(userId: string) {
   });
 }
 
-export async function InvoiceListPage({ appContext }: RouteOptions) {
-  const user = appContext.user!;
+export async function InvoiceListPage({ ctx }: RequestInfo) {
+  const user = ctx.user!;
 
   const invoices = await getInvoiceListSummary(user.id);
   return (
-    <Layout appContext={appContext}>
+    <Layout ctx={ctx}>
       <div className="space-y-2 py-4 text-right">
         <NewInvoiceButton />
       </div>
@@ -92,7 +92,7 @@ export async function InvoiceListPage({ appContext }: RouteOptions) {
 }
 
 function InvoiceListItem(
-  props: Awaited<ReturnType<typeof getInvoiceListSummary>>[number],
+  props: Awaited<ReturnType<typeof getInvoiceListSummary>>[number]
 ) {
   return (
     <TableRow>

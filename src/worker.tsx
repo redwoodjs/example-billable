@@ -1,10 +1,11 @@
-import { defineApp, ErrorResponse } from "@redwoodjs/sdk/worker";
 import {
-  index,
-  render,
-  prefix,
-  type RouteOptions as RWSDKRouteOptions,
-} from "@redwoodjs/sdk/router";
+  defineApp,
+  ErrorResponse,
+  type RequestInfo,
+} from "@redwoodjs/sdk/worker";
+import { index, render, prefix } from "@redwoodjs/sdk/router";
+import { env } from "cloudflare:workers";
+import { Prisma } from "@prisma/client";
 
 import { db, setupDb } from "@/db";
 
@@ -20,10 +21,14 @@ import { userRoutes } from "@/app/pages/user/routes";
 import { invoiceRoutes } from "@/app/pages/invoice/routes";
 
 export type AppContext = {
-  user?: Awaited<ReturnType<typeof getUser>>;
   session: Session | null;
+  user: Prisma.UserGetPayload<{
+    select: {
+      id: true;
+      email: true;
+    };
+  }> | null;
 };
-export type RouteOptions = RWSDKRouteOptions<AppContext>;
 
 export const getUser = async (session: Session | null) => {
   if (!session?.userId) {
@@ -39,13 +44,13 @@ export const getUser = async (session: Session | null) => {
   });
 };
 
-const app = defineApp<AppContext>([
-  async ({ request, appContext, env, headers }) => {
+const app = defineApp([
+  async ({ request, ctx, headers }) => {
     await setupDb(env);
     setupSessionStore(env);
 
     try {
-      appContext.session = await sessions.load(request);
+      ctx.session = await sessions.load(request);
     } catch (error) {
       if (error instanceof ErrorResponse && error.code === 401) {
         await sessions.remove(request, headers);
@@ -58,12 +63,12 @@ const app = defineApp<AppContext>([
 
       throw error;
     }
-    appContext.user = await getUser(appContext.session);
+    ctx.user = await getUser(ctx.session);
   },
   render(Document, [
     index([
-      ({ appContext }) => {
-        if (appContext.user) {
+      ({ ctx }) => {
+        if (ctx.user) {
           console.log("redirecting to invoice list");
           return new Response(null, {
             status: 302,

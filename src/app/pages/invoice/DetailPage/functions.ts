@@ -7,22 +7,21 @@ import type {
   InvoiceLabels,
   InvoiceTaxes,
 } from "./InvoiceDetailPage";
-import { RouteOptions } from "@/worker";
+import { requestInfo } from "@redwoodjs/sdk/worker";
 
 export async function saveInvoice(
   id: string,
   invoice: Omit<Invoice, "items" | "taxes" | "labels">,
   labels: InvoiceLabels,
   items: InvoiceItem[],
-  taxes: InvoiceTaxes[],
-  opts?: RouteOptions,
+  taxes: InvoiceTaxes[]
 ) {
-  const { appContext } = opts!;
+  const { ctx } = requestInfo;
 
   await db.invoice.findFirstOrThrow({
     where: {
       id,
-      userId: appContext?.user?.id,
+      userId: ctx?.user?.id,
     },
   });
 
@@ -42,13 +41,13 @@ export async function saveInvoice(
   });
 }
 
-export async function deleteLogo(id: string, opts?: RouteOptions) {
-  const { appContext } = opts!;
+export async function deleteLogo(id: string) {
+  const { ctx } = requestInfo;
 
   await db.invoice.findFirstOrThrow({
     where: {
       id,
-      userId: appContext?.user?.id,
+      userId: ctx?.user?.id,
     },
   });
 

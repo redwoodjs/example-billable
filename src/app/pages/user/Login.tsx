@@ -1,97 +1,78 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
+import type { RequestInfo } from "@redwoodjs/sdk/worker";
+import { Layout } from "@/app/pages/Layout";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
 import {
-  startAuthentication,
   startRegistration,
+  startAuthentication,
 } from "@simplewebauthn/browser";
+
 import {
-  finishPasskeyLogin,
+  startPasskeyRegistration,
   finishPasskeyRegistration,
   startPasskeyLogin,
-  startPasskeyRegistration,
+  finishPasskeyLogin,
   validateEmailAddress,
 } from "./functions";
-import { Layout } from "../Layout";
-import { Button } from "@/app/components/ui/button";
-import { RouteOptions } from "@/worker";
-import { Input } from "@/app/components/ui/input";
 
-export function LoginPage({ appContext }: RouteOptions) {
+export function LoginPage({ ctx }: RequestInfo) {
   const [email, setEmail] = useState("");
   const [result, setResult] = useState("");
-  const [isPending, startTransition] = useTransition();
-
-  const passkeyLogin = async () => {
-    // 1. Get a challenge from the worker
-    const options = await startPasskeyLogin();
-
-    // 2. Ask the browser to sign the challenge
-    const login = await startAuthentication({ optionsJSON: options });
-
-    // 3. Give the signed challenge to the worker to finish the login process
-    const success = await finishPasskeyLogin(login);
-
-    if (!success) {
-      setResult("Login failed");
-    } else {
-      setResult("Login successful!");
-    }
-
-    // redirect to invoice list
-  };
-
-  const passkeyRegister = async () => {
-    const [valid, message] = await validateEmailAddress(email);
-    if (!valid) {
-      setResult(message as string);
-      return;
-    }
-
-    // 1. Get a challenge from the worker
-    const options = await startPasskeyRegistration(email);
-    console.log("options", options);
-
-    // 2. Ask the browser to sign the challenge
-    const registration = await startRegistration({ optionsJSON: options });
-    console.log("registration", registration);
-
-    // 3. Give the signed challenge to the worker to finish the registration process
-    const success = await finishPasskeyRegistration(email, registration);
-    console.log("success", success);
-    if (!success) {
-      setResult("Registration failed");
-    } else {
-      setResult("Registration successful!");
-    }
-
-    // redirect to invoice list
-  };
-
-  const handlePerformPasskeyLogin = () => {
-    startTransition(() => void passkeyLogin());
-  };
-
-  const handlePerformPasskeyRegister = () => {
-    startTransition(() => void passkeyRegister());
-  };
 
   return (
-    <Layout appContext={appContext}>
+    <Layout ctx={ctx}>
       <Input
         type="email"
+        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
       />
-      <br />
-      <Button onClick={handlePerformPasskeyLogin} disabled={isPending}>
-        {isPending ? <>...</> : "Login"}
-      </Button>{" "}
-      <Button onClick={handlePerformPasskeyRegister} disabled={isPending}>
-        {isPending ? <>...</> : "Register"}
+      <Button
+        onClick={async () => {
+          const [valid, error] = await validateEmailAddress(email);
+          if (!valid) {
+            setResult(error as string);
+            return;
+          }
+
+          const options = await startPasskeyRegistration(email);
+          const registration = await startRegistration({
+            optionsJSON: options,
+          });
+
+          const success = await finishPasskeyRegistration(email, registration);
+
+          if (success) {
+            window.location.href = "/invoice/list";
+          } else {
+            setResult("Failed to register");
+          }
+        }}
+      >
+        Register
       </Button>
-      {result && <div>{result}</div>}
+      <Button
+        onClick={async () => {
+          const options = await startPasskeyLogin();
+          const authentication = await startAuthentication({
+            optionsJSON: options,
+          });
+
+          const success = await finishPasskeyLogin(authentication);
+
+          if (success) {
+            window.location.href = "/invoice/list";
+          } else {
+            setResult("Failed to login");
+          }
+        }}
+      >
+        Login
+      </Button>
+      <div>{result}</div>
     </Layout>
   );
 }

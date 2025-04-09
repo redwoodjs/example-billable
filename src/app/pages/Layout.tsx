@@ -1,4 +1,4 @@
-import type { AppContext } from "@/worker";
+import type { RequestInfo } from "@redwoodjs/sdk/worker";
 
 import { link } from "@/app/shared/links";
 
@@ -25,7 +25,7 @@ function Logo() {
   );
 }
 
-function Header({ user }: { user?: AppContext["user"] }) {
+function Header({ user }: { user?: RequestInfo["ctx"]["user"] }) {
   return (
     <div className="px-8 py-4 flex justify-between items-center border-b">
       <a href="/">
@@ -44,14 +44,14 @@ function Header({ user }: { user?: AppContext["user"] }) {
 
 export function Layout({
   children,
-  appContext,
+  ctx,
 }: {
   children: React.ReactNode;
-  appContext: AppContext;
+  ctx: RequestInfo["ctx"];
 }) {
   return (
     <div className="min-h-screen bg-white">
-      <Header user={appContext?.user} />
+      <Header user={ctx?.user} />
 
       <main className="min-h-screen">
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</div>
