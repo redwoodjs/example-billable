@@ -8,13 +8,13 @@
   // Entry point
   "main": "src/worker.tsx",
   "placement": {
-    "mode": "smart",
+    "mode": "smart"
   },
   "routes": [
     {
       "pattern": "billable.me",
-      "custom_domain": true,
-    },
+      "custom_domain": true
+    }
   ],
 
   // Compatibility settings
@@ -23,12 +23,12 @@
 
   // Assets configuration
   "assets": {
-    "binding": "ASSETS",
+    "binding": "ASSETS"
   },
 
   // Observability settings
   "observability": {
-    "enabled": true,
+    "enabled": true
   },
 
   // Durable Objects configuration
@@ -36,23 +36,23 @@
     "bindings": [
       {
         "name": "SESSION_DURABLE_OBJECT",
-        "class_name": "SessionDurableObject",
-      },
-    ],
+        "class_name": "SessionDurableObject"
+      }
+    ]
   },
 
   // Environment variables
   "vars": {
     "APP_URL": "https://billable.me",
-    "APP_NAME": "billable",
+    "APP_NAME": "billable"
   },
 
   // Migrations configuration
   "migrations": [
     {
       "tag": "v1",
-      "new_classes": ["SessionDurableObject"],
-    },
+      "new_sqlite_classes": ["SessionDurableObject"]
+    }
   ],
 
   // D1 database configuration
@@ -60,14 +60,14 @@
     {
       "binding": "DB",
       "database_name": "billable",
-      "database_id": "f8d1a283-8c96-4df3-ae89-675ed7d47aa1",
-    },
+      "database_id": "f8d1a283-8c96-4df3-ae89-675ed7d47aa1"
+    }
   ],
 
   "r2_buckets": [
     {
       "binding": "R2",
-      "bucket_name": "billable",
-    },
-  ],
+      "bucket_name": "billable"
+    }
+  ]
 }
