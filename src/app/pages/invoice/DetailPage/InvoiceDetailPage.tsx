@@ -2,7 +2,7 @@
 
 import { type RequestInfo } from "@redwoodjs/sdk/worker";
 import { Layout } from "@/app/pages/Layout";
-import { InvoiceForm } from "./InvoiceForm";
+import { Invoice, InvoiceForm } from "./InvoiceForm";
 import { db } from "@/db";
 import {
   BreadcrumbLink,
@@ -90,7 +90,7 @@ export async function InvoiceDetailPage({ params, ctx }: RequestInfo) {
 
         <BreadcrumbPage>Edit Invoice</BreadcrumbPage>
       </BreadcrumbList>
-      <InvoiceForm invoice={invoice} ctx={ctx} />
+      <InvoiceForm invoice={invoice as Invoice} ctx={ctx} />
     </Layout>
   );
 }

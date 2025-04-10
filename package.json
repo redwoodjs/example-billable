@@ -18,19 +18,19 @@
     "clean:vendor": "rm -rf ./vendor/dist",
     "release": "pnpm build && wrangler deploy",
     "format": "prettier --write ./src",
-    "generate": "npx prisma generate",
     "migrate:dev": "pnpm generate && wrangler d1 migrations apply DB --local",
     "migrate:prd": "wrangler d1 migrations apply DB --remote",
     "migrate:new": "rw-scripts migrate-new",
     "seed": "pnpm worker:run ./src/scripts/seed.ts",
-    "check": "pnpm generate && pnpm types",
-    "types": "pnpm tsc"
+    "generate": "rw-scripts ensure-env && wrangler types",
+    "check": "npm run generate && npm run types",
+    "types": "tsc"
   },
   "dependencies": {
     "@prisma/adapter-d1": "^6.4.1",
     "@prisma/client": "^6.4.1",
     "@radix-ui/react-slot": "^1.1.1",
-    "@redwoodjs/sdk": "0.0.55",
+    "@redwoodjs/sdk": "0.0.56",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
     "class-variance-authority": "^0.7.1",
