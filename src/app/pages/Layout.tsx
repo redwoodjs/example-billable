@@ -1,4 +1,4 @@
-import type { RequestInfo } from "@redwoodjs/sdk/worker";
+import { requestInfo, type RequestInfo } from "@redwoodjs/sdk/worker";
 
 import { link } from "@/app/shared/links";
 
@@ -44,14 +44,13 @@ function Header({ user }: { user?: RequestInfo["ctx"]["user"] }) {
 
 export function Layout({
   children,
-  ctx,
-}: {
-  children: React.ReactNode;
-  ctx: RequestInfo["ctx"];
 }) {
+
+  const user = requestInfo.ctx?.user
+
   return (
     <div className="min-h-screen bg-white">
-      <Header user={ctx?.user} />
+      <Header user={user} />
 
       <main className="min-h-screen">
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</div>

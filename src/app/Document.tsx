@@ -1,6 +1,8 @@
 import stylesUrl from "./style.css?url";
 
-export const Document: React.FC<{ children: React.ReactNode }> = ({
+import type { DocumentProps } from "@redwoodjs/sdk/router";
+
+export const Document: React.FC<DocumentProps> = ({
   children,
 }) => (
   <html lang="en">
@@ -9,10 +11,11 @@ export const Document: React.FC<{ children: React.ReactNode }> = ({
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Billable: Billing Made Simple. Period.</title>
       <link rel="stylesheet" href={stylesUrl} />
-      <script type="module" src="/src/client.tsx"></script>
+      <link rel="preload" href="/src/client.tsx" as="script" />
     </head>
     <body>
       <div id="root">{children}</div>
+      {/* <script src="/src/client.tsx"></script> */}
     </body>
   </html>
 );

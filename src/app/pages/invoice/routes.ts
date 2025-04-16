@@ -28,57 +28,57 @@ export const invoiceRoutes = [
     });
   }),
   route("/list", [isAuthenticated, InvoiceListPage]),
-  route("/:id", [isAuthenticated, InvoiceDetailPage]),
-  route("/:id/upload", [
-    isAuthenticated,
-    async ({ request, params, ctx }) => {
-      if (
-        request.method !== "POST" &&
-        !request.headers.get("content-type")?.includes("multipart/form-data")
-      ) {
-        return new Response("Method not allowed", { status: 405 });
-      }
+  // route("/:id", [isAuthenticated, InvoiceDetailPage]),
+  // route("/:id/upload", [
+  //   isAuthenticated,
+  //   async ({ request, params, ctx }) => {
+  //     if (
+  //       request.method !== "POST" &&
+  //       !request.headers.get("content-type")?.includes("multipart/form-data")
+  //     ) {
+  //       return new Response("Method not allowed", { status: 405 });
+  //     }
 
-      const formData = await request.formData();
-      const file = formData.get("file") as File;
+  //     const formData = await request.formData();
+  //     const file = formData.get("file") as File;
 
-      // Stream the file directly to R2
-      const r2ObjectKey = `/invoice/logos/${ctx?.user?.id}/${
-        params.id
-      }-${Date.now()}-${file.name}`;
-      await env.R2.put(r2ObjectKey, file.stream(), {
-        httpMetadata: {
-          contentType: file.type,
-        },
-      });
+  //     // Stream the file directly to R2
+  //     const r2ObjectKey = `/invoice/logos/${ctx?.user?.id}/${
+  //       params.id
+  //     }-${Date.now()}-${file.name}`;
+  //     await env.R2.put(r2ObjectKey, file.stream(), {
+  //       httpMetadata: {
+  //         contentType: file.type,
+  //       },
+  //     });
 
-      await db.invoice.update({
-        where: { id: params.id },
-        data: {
-          supplierLogo: r2ObjectKey,
-        },
-      });
+  //     await db.invoice.update({
+  //       where: { id: params.id },
+  //       data: {
+  //         supplierLogo: r2ObjectKey,
+  //       },
+  //     });
 
-      return new Response(JSON.stringify({ key: r2ObjectKey }), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    },
-  ]),
-  route("/logos/*", [
-    isAuthenticated,
-    async ({ params }) => {
-      const object = await env.R2.get("/invoice/logos/" + params.$0);
-      if (object === null) {
-        return new Response("Object Not Found", { status: 404 });
-      }
-      return new Response(object.body, {
-        headers: {
-          "Content-Type": object.httpMetadata?.contentType as string,
-        },
-      });
-    },
-  ]),
+  //     return new Response(JSON.stringify({ key: r2ObjectKey }), {
+  //       status: 200,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //   },
+  // ]),
+  // route("/logos/*", [
+  //   isAuthenticated,
+  //   async ({ params }) => {
+  //     const object = await env.R2.get("/invoice/logos/" + params.$0);
+  //     if (object === null) {
+  //       return new Response("Object Not Found", { status: 404 });
+  //     }
+  //     return new Response(object.body, {
+  //       headers: {
+  //         "Content-Type": object.httpMetadata?.contentType as string,
+  //       },
+  //     });
+  //   },
+  // ]),
 ];
