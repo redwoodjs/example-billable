@@ -15,7 +15,7 @@ export const Document: React.FC<DocumentProps> = ({
     </head>
     <body>
       <div id="root">{children}</div>
-      {/* <script src="/src/client.tsx"></script> */}
+      <script src="/src/client.tsx"></script>
     </body>
   </html>
 );

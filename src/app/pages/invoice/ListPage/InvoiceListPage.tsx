@@ -66,13 +66,13 @@ export async function InvoiceListPage() {
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
-        {!invoices && (
+        {!invoices.length && (
           <TableCaption>No invoices found</TableCaption>
         )}
         <TableBody>
-          {/* {invoices && invoices.map((i) => (
+          {invoices && invoices.map((i) => (
             <InvoiceListItem {...i} key={"invoice-" + i.id} />
-          ))} */}
+          ))}
         </TableBody>
       </Table>
     </Layout>
@@ -83,24 +83,23 @@ function InvoiceListItem(
   props: Awaited<ReturnType<typeof getInvoiceListSummary>>[0]
 ) {
 
-  console.log(props)
 
   
   return (
     <TableRow>
       <TableCell>
-        {/* <a href={link("/invoice/:id", { id: props.id })}>{props.number}</a> */}
+        <a href={link("/invoice/:id", { id: props.id })}>{props.number}</a>
       </TableCell>
       <TableCell>
-        {/* {props.date.toLocaleDateString(undefined, {
+        {props.date.toLocaleDateString(undefined, {
           year: "numeric",
           month: "long",
           day: "numeric",
-        })} */}
+        })}
       </TableCell>
-      {/* <TableCell>{props.customer ?? ""}</TableCell> */}
+      <TableCell>{props.customer ?? ""}</TableCell>
       <TableCell className="text-right">
-        {/* <a href={link("/invoice/:id", { id: props.id })}>Edit</a> */}
+        <a href={link("/invoice/:id", { id: props.id })}>Edit</a>
       </TableCell>
     </TableRow>
   );

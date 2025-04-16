@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { RequestInfo } from "@redwoodjs/sdk/worker";
-import { Layout } from "@/app/pages/Layout";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import {
@@ -18,12 +17,12 @@ import {
   validateEmailAddress,
 } from "./functions";
 
-export function LoginPage({ ctx }: RequestInfo) {
+export function LoginForm() {
   const [email, setEmail] = useState("");
   const [result, setResult] = useState("");
 
   return (
-    <Layout ctx={ctx}>
+    <>
       <Input
         type="email"
         placeholder="Email"
@@ -73,6 +72,6 @@ export function LoginPage({ ctx }: RequestInfo) {
         Login
       </Button>
       <div>{result}</div>
-    </Layout>
+    </>
   );
 }
