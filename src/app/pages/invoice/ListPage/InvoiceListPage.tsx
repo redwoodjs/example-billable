@@ -66,13 +66,12 @@ export async function InvoiceListPage() {
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
-        {!invoices.length && (
-          <TableCaption>No invoices found</TableCaption>
-        )}
+        {!invoices.length && <TableCaption>No invoices found</TableCaption>}
         <TableBody>
-          {invoices && invoices.map((i) => (
-            <InvoiceListItem {...i} key={"invoice-" + i.id} />
-          ))}
+          {invoices &&
+            invoices.map((i) => (
+              <InvoiceListItem key={"invoice-" + i.id} {...i} />
+            ))}
         </TableBody>
       </Table>
     </Layout>
@@ -82,9 +81,6 @@ export async function InvoiceListPage() {
 function InvoiceListItem(
   props: Awaited<ReturnType<typeof getInvoiceListSummary>>[0]
 ) {
-
-
-  
   return (
     <TableRow>
       <TableCell>
