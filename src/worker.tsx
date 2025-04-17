@@ -1,9 +1,8 @@
 import {
   defineApp,
   ErrorResponse,
-  type RequestInfo,
 } from "@redwoodjs/sdk/worker";
-import { index, render, prefix } from "@redwoodjs/sdk/router";
+import { render, prefix, route } from "@redwoodjs/sdk/router";
 import { env } from "cloudflare:workers";
 import { Prisma } from "@prisma/client";
 
@@ -34,14 +33,17 @@ export const getUser = async (session: Session | null) => {
   if (!session?.userId) {
     return null;
   }
-
-  return await db.user.findFirstOrThrow({
+  
+  return await db.user.findUnique({
     select: {
       id: true,
       email: true,
     },
-    where: { id: session?.userId },
-  });
+    where: {
+      id: session?.userId
+    }
+  })
+
 };
 
 const app = defineApp([
@@ -51,6 +53,7 @@ const app = defineApp([
 
     try {
       ctx.session = await sessions.load(request);
+      ctx.user = await getUser(ctx.session);
     } catch (error) {
       if (error instanceof ErrorResponse && error.code === 401) {
         await sessions.remove(request, headers);
@@ -60,13 +63,11 @@ const app = defineApp([
           headers,
         });
       }
-
-      throw error;
     }
-    ctx.user = await getUser(ctx.session);
+    
   },
   render(Document, [
-    index([
+    route("/", [
       ({ ctx }) => {
         if (ctx.user) {
           console.log("redirecting to invoice list");

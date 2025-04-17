@@ -71,12 +71,23 @@ async function getInvoice(id: string, userId: string) {
     };
   }
 
-  return await db.invoice.findFirstOrThrow({
+  const invoice = await db.invoice.findFirstOrThrow({
     where: {
       id,
       userId,
     },
   });
+  return {
+    ...invoice,
+    items:
+      typeof invoice.items === "string"
+        ? JSON.parse(invoice.items)
+        : invoice.items,
+    taxes:
+      typeof invoice.taxes === "string"
+        ? JSON.parse(invoice.taxes)
+        : invoice.taxes,
+  };
 }
 
 export async function InvoiceDetailPage({ params, ctx }: RequestInfo) {

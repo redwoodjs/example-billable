@@ -1,7 +1,5 @@
-"use server";
-
 import { Layout } from "@/app/pages/Layout";
-import type { RequestInfo } from "@redwoodjs/sdk/worker";
+import { requestInfo } from "@redwoodjs/sdk/worker";
 
 import { NewInvoiceButton } from "./components/NewInvoiceButton";
 import { db } from "@/db";
@@ -30,41 +28,31 @@ export type InvoiceTaxes = {
 };
 
 async function getInvoiceListSummary(userId: string) {
-  const invoices =
-    (await db.invoice.findMany({
-      select: {
-        id: true,
-        number: true,
-        date: true,
-        status: true,
-        customer: true,
-      },
-      where: {
-        userId,
-      },
-      orderBy: {
-        date: "desc",
-      },
-    })) ?? [];
-
-  return invoices.map((invoice) => {
-    const { id, date, number, customer, status } = invoice;
-    return {
-      id,
-      date,
-      number,
-      customer: customer?.split("\n")[0] || "",
-      status,
-    };
+  return await db.invoice.findMany({
+    select: {
+      id: true,
+      number: true,
+      date: true,
+      status: true,
+      customer: true,
+    },
+    where: {
+      userId,
+    },
+    orderBy: {
+      date: "desc",
+    },
   });
 }
 
-export async function InvoiceListPage({ ctx }: RequestInfo) {
-  const user = ctx.user!;
-
+export async function InvoiceListPage() {
+  const user = requestInfo.ctx.user!;
   const invoices = await getInvoiceListSummary(user.id);
+
+  console.log(invoices);
+
   return (
-    <Layout ctx={ctx}>
+    <Layout>
       <div className="space-y-2 py-4 text-right">
         <NewInvoiceButton />
       </div>
@@ -78,13 +66,12 @@ export async function InvoiceListPage({ ctx }: RequestInfo) {
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
-        {invoices.length === 0 && (
-          <TableCaption>No invoices found</TableCaption>
-        )}
+        {!invoices.length && <TableCaption>No invoices found</TableCaption>}
         <TableBody>
-          {invoices.map((i) => (
-            <InvoiceListItem {...i} key={"invoice-" + i.id} />
-          ))}
+          {invoices &&
+            invoices.map((i) => (
+              <InvoiceListItem key={"invoice-" + i.id} {...i} />
+            ))}
         </TableBody>
       </Table>
     </Layout>
@@ -92,7 +79,7 @@ export async function InvoiceListPage({ ctx }: RequestInfo) {
 }
 
 function InvoiceListItem(
-  props: Awaited<ReturnType<typeof getInvoiceListSummary>>[number]
+  props: Awaited<ReturnType<typeof getInvoiceListSummary>>[0]
 ) {
   return (
     <TableRow>
@@ -106,7 +93,7 @@ function InvoiceListItem(
           day: "numeric",
         })}
       </TableCell>
-      <TableCell>{props.customer}</TableCell>
+      <TableCell>{props.customer ?? ""}</TableCell>
       <TableCell className="text-right">
         <a href={link("/invoice/:id", { id: props.id })}>Edit</a>
       </TableCell>
