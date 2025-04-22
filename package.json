@@ -30,7 +30,7 @@
     "@prisma/adapter-d1": "^6.4.1",
     "@prisma/client": "^6.4.1",
     "@radix-ui/react-slot": "^1.1.1",
-    "@redwoodjs/sdk": "0.0.65",
+    "@redwoodjs/sdk": "0.0.66",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
     "class-variance-authority": "^0.7.1",
@@ -44,13 +44,13 @@
     "typescript": "^5.8.2"
   },
   "devDependencies": {
-    "postcss": "^8.4.49",
-    "autoprefixer": "^10.4.20",
-    "tailwindcss": "^3.4.16",
     "@types/node": "^22.13.11",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
     "prisma": "^6.4.1",
+    "tailwindcss": "^3.4.16",
     "vite": "^6.1.1",
     "wrangler": "^4.11.1"
   },
