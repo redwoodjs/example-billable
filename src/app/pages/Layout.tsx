@@ -1,4 +1,4 @@
-import { requestInfo, type RequestInfo } from "@redwoodjs/sdk/worker";
+import { requestInfo, type RequestInfo } from "rwsdk/worker";
 
 import { link } from "@/app/shared/links";
 
@@ -42,11 +42,8 @@ function Header({ user }: { user?: RequestInfo["ctx"]["user"] }) {
   );
 }
 
-export function Layout({
-  children,
-}) {
-
-  const user = requestInfo.ctx?.user
+export function Layout({ children }) {
+  const user = requestInfo.ctx?.user;
 
   return (
     <div className="min-h-screen bg-white">

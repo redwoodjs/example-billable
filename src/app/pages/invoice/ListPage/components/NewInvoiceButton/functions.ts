@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { requestInfo } from "@redwoodjs/sdk/worker";
+import { requestInfo } from "rwsdk/worker";
 
 export async function newInvoice() {
   const { ctx } = requestInfo;

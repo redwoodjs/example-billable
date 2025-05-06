@@ -1,6 +1,6 @@
 "use server";
 
-import { type RequestInfo } from "@redwoodjs/sdk/worker";
+import { type RequestInfo } from "rwsdk/worker";
 import { Layout } from "@/app/pages/Layout";
 import { Invoice, InvoiceForm } from "./InvoiceForm";
 import { db } from "@/db";

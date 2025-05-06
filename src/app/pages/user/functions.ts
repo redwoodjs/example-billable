@@ -12,7 +12,7 @@ import {
 } from "@simplewebauthn/server";
 
 import { sessions } from "@/session/store";
-import { requestInfo } from "@redwoodjs/sdk/worker";
+import { requestInfo } from "rwsdk/worker";
 import { db } from "@/db";
 
 const IS_DEV = process.env.NODE_ENV === "development";
@@ -73,7 +73,7 @@ export async function startPasskeyLogin() {
 
 export async function finishPasskeyRegistration(
   email: string,
-  registration: RegistrationResponseJSON,
+  registration: RegistrationResponseJSON
 ) {
   const { request, headers } = requestInfo;
   const { origin } = new URL(request.url);

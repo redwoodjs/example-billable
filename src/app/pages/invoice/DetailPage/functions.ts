@@ -7,7 +7,7 @@ import type {
   InvoiceLabels,
   InvoiceTaxes,
 } from "./InvoiceDetailPage";
-import { requestInfo } from "@redwoodjs/sdk/worker";
+import { requestInfo } from "rwsdk/worker";
 
 export async function saveInvoice(
   id: string,

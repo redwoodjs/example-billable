@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { toast, Toaster } from "sonner";
-import type { RequestInfo } from "@redwoodjs/sdk/worker";
+import type { RequestInfo } from "rwsdk/worker";
 
 import { type InvoiceTaxes, type InvoiceItem } from "./InvoiceDetailPage";
 import { deleteLogo, saveInvoice } from "./functions";

@@ -1,5 +1,5 @@
 import { Layout } from "@/app/pages/Layout";
-import { requestInfo } from "@redwoodjs/sdk/worker";
+import { requestInfo } from "rwsdk/worker";
 
 import { NewInvoiceButton } from "./components/NewInvoiceButton";
 import { db } from "@/db";

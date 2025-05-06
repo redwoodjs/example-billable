@@ -1,5 +1,5 @@
-import { index, route } from "@redwoodjs/sdk/router";
-import type { RequestInfo } from "@redwoodjs/sdk/worker";
+import { index, route } from "rwsdk/router";
+import type { RequestInfo } from "rwsdk/worker";
 import { env } from "cloudflare:workers";
 
 import { db } from "@/db";

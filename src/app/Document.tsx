@@ -1,6 +1,6 @@
 import stylesUrl from "./style.css?url";
 
-import type { DocumentProps } from "@redwoodjs/sdk/router";
+import type { DocumentProps } from "rwsdk/router";
 
 export const Document: React.FC<DocumentProps> = ({ children }) => (
   <html lang="en">

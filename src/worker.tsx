@@ -1,8 +1,5 @@
-import {
-  defineApp,
-  ErrorResponse,
-} from "@redwoodjs/sdk/worker";
-import { render, prefix, route } from "@redwoodjs/sdk/router";
+import { defineApp, ErrorResponse } from "rwsdk/worker";
+import { render, prefix, route } from "rwsdk/router";
 import { env } from "cloudflare:workers";
 import { Prisma } from "@prisma/client";
 
@@ -33,17 +30,16 @@ export const getUser = async (session: Session | null) => {
   if (!session?.userId) {
     return null;
   }
-  
+
   return await db.user.findUnique({
     select: {
       id: true,
       email: true,
     },
     where: {
-      id: session?.userId
-    }
-  })
-
+      id: session?.userId,
+    },
+  });
 };
 
 const app = defineApp([
@@ -64,7 +60,6 @@ const app = defineApp([
         });
       }
     }
-    
   },
   render(Document, [
     route("/", [

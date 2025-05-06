@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { RequestInfo } from "@redwoodjs/sdk/worker";
+import type { RequestInfo } from "rwsdk/worker";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import {
