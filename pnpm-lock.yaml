@@ -39,8 +39,8 @@ importers:
         specifier: ^3.0.4
         version: 3.0.4(react@19.2.0-canary-39cad7af-20250411)
       rwsdk:
-        specifier: 0.1.0-alpha.1
-        version: 0.1.0-alpha.1(rollup@4.38.0)(typescript@5.8.2)(vite@6.2.4(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.36.0)(tsx@4.19.2)(yaml@2.6.1))(webpack@5.96.1(esbuild@0.25.2))(workerd@1.20250525.0)
+        specifier: 0.1.0-alpha.2
+        version: 0.1.0-alpha.2(rollup@4.38.0)(typescript@5.8.2)(vite@6.2.4(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.36.0)(tsx@4.19.2)(yaml@2.6.1))(webpack@5.96.1(esbuild@0.25.2))(workerd@1.20250525.0)
       sonner:
         specifier: ^1.7.4
         version: 1.7.4(react-dom@19.2.0-canary-39cad7af-20250411(react@19.2.0-canary-39cad7af-20250411))(react@19.2.0-canary-39cad7af-20250411)
@@ -2303,8 +2303,8 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
-  rwsdk@0.1.0-alpha.1:
-    resolution: {integrity: sha512-lTubnnwgVepFEqz20jvk8gU+xXa4sCBIdWzc4Ow59xvyTaLG+ALt4sQOlC83bIdwSVl6/SPpTwQOVvnURUVR1w==}
+  rwsdk@0.1.0-alpha.2:
+    resolution: {integrity: sha512-myTTxPCJi/zYH2V/mO151b3aogc3rqvKzUqaC8Gs41AAJR+XFsZScv9pRfasxd1oPML8Mt97ui+c0g8EVRcR2A==}
     hasBin: true
     peerDependencies:
       vite: ^6.2.6
@@ -2791,7 +2791,7 @@ snapshots:
       '@babel/traverse': 7.26.4
       '@babel/types': 7.26.3
       convert-source-map: 2.0.0
-      debug: 4.4.0
+      debug: 4.4.1
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -2870,7 +2870,7 @@ snapshots:
       '@babel/parser': 7.26.3
       '@babel/template': 7.25.9
       '@babel/types': 7.26.3
-      debug: 4.4.0
+      debug: 4.4.1
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -3438,11 +3438,11 @@ snapshots:
 
   '@puppeteer/browsers@2.3.0':
     dependencies:
-      debug: 4.4.0
+      debug: 4.4.1
       extract-zip: 2.0.1
       progress: 2.0.3
       proxy-agent: 6.5.0
-      semver: 7.7.1
+      semver: 7.7.2
       tar-fs: 3.0.9
       unbzip2-stream: 1.4.3
       yargs: 17.7.2
@@ -4694,7 +4694,7 @@ snapshots:
     dependencies:
       '@puppeteer/browsers': 2.3.0
       chromium-bidi: 0.6.3(devtools-protocol@0.0.1312386)
-      debug: 4.4.0
+      debug: 4.4.1
       devtools-protocol: 0.0.1312386
       ws: 8.18.0
     transitivePeerDependencies:
@@ -4792,7 +4792,7 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  rwsdk@0.1.0-alpha.1(rollup@4.38.0)(typescript@5.8.2)(vite@6.2.4(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.36.0)(tsx@4.19.2)(yaml@2.6.1))(webpack@5.96.1(esbuild@0.25.2))(workerd@1.20250525.0):
+  rwsdk@0.1.0-alpha.2(rollup@4.38.0)(typescript@5.8.2)(vite@6.2.4(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.36.0)(tsx@4.19.2)(yaml@2.6.1))(webpack@5.96.1(esbuild@0.25.2))(workerd@1.20250525.0):
     dependencies:
       '@cloudflare/vite-plugin': 0.0.0-1bae8618b(rollup@4.38.0)(vite@6.2.4(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.36.0)(tsx@4.19.2)(yaml@2.6.1))(workerd@1.20250525.0)(wrangler@4.19.1(@cloudflare/workers-types@4.20250408.0))
       '@cloudflare/workers-types': 4.20250408.0
@@ -4802,7 +4802,7 @@ snapshots:
       '@types/react-dom': 19.1.2(@types/react@19.1.2)
       '@types/react-is': 19.0.0
       '@vitejs/plugin-react': 4.3.4(vite@6.2.4(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.36.0)(tsx@4.19.2)(yaml@2.6.1))
-      debug: 4.4.0
+      debug: 4.4.1
       enhanced-resolve: 5.18.1
       eventsource-parser: 3.0.1
       execa: 9.5.2
@@ -4812,7 +4812,7 @@ snapshots:
       jsonc-parser: 3.3.1
       lodash: 4.17.21
       magic-string: 0.30.17
-      miniflare: 4.20250428.1
+      miniflare: 4.20250525.1
       picocolors: 1.1.1
       puppeteer-core: 22.15.0
       react: 19.2.0-canary-39cad7af-20250411
@@ -5162,7 +5162,7 @@ snapshots:
 
   vite-tsconfig-paths@5.1.4(typescript@5.8.2)(vite@6.2.4(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.36.0)(tsx@4.19.2)(yaml@2.6.1)):
     dependencies:
-      debug: 4.4.0
+      debug: 4.4.1
       globrex: 0.1.2
       tsconfck: 3.1.4(typescript@5.8.2)
     optionalDependencies:
