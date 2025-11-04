@@ -33,13 +33,13 @@ export const getUser = async (session: Session | null) => {
     return null;
   }
 
-  return (
-    (await db
-      .selectFrom("User")
-      .select(["id", "email"])
-      .where("id", "=", session.userId)
-      .executeTakeFirst()) || null
-  );
+  const user = await db
+    .selectFrom("User")
+    .select(["id", "email"])
+    .where("id", "=", session.userId)
+    .executeTakeFirst();
+
+  return user || null;
 };
 
 const app = defineApp([

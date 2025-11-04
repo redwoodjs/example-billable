@@ -18,7 +18,6 @@
     "clean:vendor": "rm -rf ./vendor/dist",
     "release": "rw-scripts ensure-deploy-env && npm run clean && npm run build && RWSDK_DEPLOY=1 wrangler deploy",
     "format": "prettier --write ./src",
-    "seed": "pnpm worker:run ./src/scripts/seed.ts",
     "generate": "rw-scripts ensure-env && wrangler types",
     "check": "npm run generate && npm run types",
     "types": "tsc"
