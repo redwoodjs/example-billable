@@ -13,12 +13,16 @@ import {
 
 import { sessions } from "@/session/store";
 import { requestInfo } from "rwsdk/worker";
-import { db } from "@/db";
+import { db } from "@/db/db";
 
 const IS_DEV = process.env.NODE_ENV === "development";
 
 export async function validateEmailAddress(email: string) {
-  const user = await db.user.findUnique({ where: { email } });
+  const user = await db
+    .selectFrom("User")
+    .select(["id"])
+    .where("email", "=", email)
+    .executeTakeFirst();
   if (user) {
     return [false, "Email address already exists"];
   } else {
@@ -98,20 +102,29 @@ export async function finishPasskeyRegistration(
 
   await sessions.save(headers, { challenge: null });
 
-  const user = await db.user.create({
-    data: {
-      email,
-    },
-  });
+  const userId = crypto.randomUUID();
+  const now = new Date().toISOString();
 
-  await db.credential.create({
-    data: {
-      userId: user.id,
+  await db
+    .insertInto("User")
+    .values({
+      id: userId,
+      email,
+      createdAt: now,
+    })
+    .execute();
+
+  await db
+    .insertInto("Credential")
+    .values({
+      id: crypto.randomUUID(),
+      userId,
       credentialId: verification.registrationInfo.credential.id,
       publicKey: verification.registrationInfo.credential.publicKey,
       counter: verification.registrationInfo.credential.counter,
-    },
-  });
+      createdAt: now,
+    })
+    .execute();
 
   return true;
 }
@@ -127,11 +140,11 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
     return false;
   }
 
-  const credential = await db.credential.findUnique({
-    where: {
-      credentialId: login.id,
-    },
-  });
+  const credential = await db
+    .selectFrom("Credential")
+    .selectAll()
+    .where("credentialId", "=", login.id)
+    .executeTakeFirst();
 
   if (!credential) {
     return false;
@@ -154,20 +167,17 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
     return false;
   }
 
-  await db.credential.update({
-    where: {
-      credentialId: login.id,
-    },
-    data: {
-      counter: verification.authenticationInfo.newCounter,
-    },
-  });
+  await db
+    .updateTable("Credential")
+    .set({ counter: verification.authenticationInfo.newCounter })
+    .where("credentialId", "=", login.id)
+    .execute();
 
-  const user = await db.user.findUnique({
-    where: {
-      id: credential.userId,
-    },
-  });
+  const user = await db
+    .selectFrom("User")
+    .selectAll()
+    .where("id", "=", credential.userId)
+    .executeTakeFirst();
 
   if (!user) {
     return false;

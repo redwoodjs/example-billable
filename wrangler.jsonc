@@ -37,6 +37,10 @@
       {
         "name": "SESSION_DURABLE_OBJECT",
         "class_name": "SessionDurableObject"
+      },
+      {
+        "name": "APP_DURABLE_OBJECT",
+        "class_name": "AppDurableObject"
       }
     ]
   },
@@ -51,16 +55,7 @@
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["SessionDurableObject"]
-    }
-  ],
-
-  // D1 database configuration
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "billable",
-      "database_id": "f8d1a283-8c96-4df3-ae89-675ed7d47aa1"
+      "new_sqlite_classes": ["SessionDurableObject", "AppDurableObject"]
     }
   ],
 

@@ -1,25 +1,28 @@
 import { defineScript } from "rwsdk/worker";
-import { db, setupDb } from "../db";
+import { db } from "@/db/db";
 
 export default defineScript(async ({ env }) => {
-  setupDb(env);
+  await db.deleteFrom("Invoice").execute();
+  await db.deleteFrom("User").execute();
+  await db.deleteFrom("Credential").execute();
 
-  await db.$executeRawUnsafe(`\
-    DELETE FROM Invoice;
-    DELETE FROM User;
-    DELETE FROM sqlite_sequence;
-  `);
+  const userId = "1";
+  const now = new Date().toISOString();
 
-  const user = await db.user.create({
-    data: {
-      id: "1",
+  await db
+    .insertInto("User")
+    .values({
+      id: userId,
       email: "peter@redwoodjs.com",
-    },
-  });
+      createdAt: now,
+    })
+    .execute();
 
-  await db.invoice.create({
-    data: {
-      userId: user.id,
+  await db
+    .insertInto("Invoice")
+    .values({
+      id: crypto.randomUUID(),
+      userId,
       number: "1",
       customer: "Acme Corp",
       supplierName: "Global Supplies Ltd",
@@ -38,13 +41,19 @@ export default defineScript(async ({ env }) => {
       ]),
       taxes: JSON.stringify([{ description: "VAT", amount: 0.14 }]),
       currency: "$",
-      createdAt: new Date("2024-01-01T10:00:00Z"),
-    },
-  });
+      createdAt: "2024-01-01T10:00:00Z",
+      title: "invoice",
+      date: "2024-01-01T10:00:00Z",
+      status: "draft",
+      labels: '{"invoiceNumber":"Invoice #","invoiceDate":"Date","itemDescription":"Description","itemQuantity":"Quantity","itemPrice":"Price","subtotal":"Subtotal","total":"Total"}',
+    })
+    .execute();
 
-  await db.invoice.create({
-    data: {
-      userId: user.id,
+  await db
+    .insertInto("Invoice")
+    .values({
+      id: crypto.randomUUID(),
+      userId,
       number: "2",
       customer: "TechStart Inc",
       supplierName: "Global Supplies Ltd",
@@ -63,13 +72,19 @@ export default defineScript(async ({ env }) => {
         { description: "City Tax", amount: 0.02 },
       ]),
       currency: "$",
-      createdAt: new Date("2024-01-02T10:00:00Z"),
-    },
-  });
+      createdAt: "2024-01-02T10:00:00Z",
+      title: "invoice",
+      date: "2024-01-02T10:00:00Z",
+      status: "draft",
+      labels: '{"invoiceNumber":"Invoice #","invoiceDate":"Date","itemDescription":"Description","itemQuantity":"Quantity","itemPrice":"Price","subtotal":"Subtotal","total":"Total"}',
+    })
+    .execute();
 
-  await db.invoice.create({
-    data: {
-      userId: user.id,
+  await db
+    .insertInto("Invoice")
+    .values({
+      id: crypto.randomUUID(),
+      userId,
       number: "3",
       customer:
         "Marketing Masters LLC\nAttn: John Smith\n555 Commerce St\nBusiness City, BZ 54321",
@@ -86,13 +101,19 @@ export default defineScript(async ({ env }) => {
       ]),
       taxes: JSON.stringify([{ description: "VAT", amount: 0.14 }]),
       currency: "$",
-      createdAt: new Date("2024-01-03T10:00:00Z"),
-    },
-  });
+      createdAt: "2024-01-03T10:00:00Z",
+      title: "invoice",
+      date: "2024-01-03T10:00:00Z",
+      status: "draft",
+      labels: '{"invoiceNumber":"Invoice #","invoiceDate":"Date","itemDescription":"Description","itemQuantity":"Quantity","itemPrice":"Price","subtotal":"Subtotal","total":"Total"}',
+    })
+    .execute();
 
-  await db.invoice.create({
-    data: {
-      userId: user.id,
+  await db
+    .insertInto("Invoice")
+    .values({
+      id: crypto.randomUUID(),
+      userId,
       number: "4",
       customer: "Healthcare Solutions Corp",
       supplierName: "Global Supplies Ltd",
@@ -108,9 +129,13 @@ export default defineScript(async ({ env }) => {
         { description: "Service Tax", amount: 0.03 },
       ]),
       currency: "$",
-      createdAt: new Date("2024-01-04T10:00:00Z"),
-    },
-  });
+      createdAt: "2024-01-04T10:00:00Z",
+      title: "invoice",
+      date: "2024-01-04T10:00:00Z",
+      status: "draft",
+      labels: '{"invoiceNumber":"Invoice #","invoiceDate":"Date","itemDescription":"Description","itemQuantity":"Quantity","itemPrice":"Price","subtotal":"Subtotal","total":"Total"}',
+    })
+    .execute();
 
   console.log("Done seeding!");
 });

@@ -2,7 +2,7 @@ import { Layout } from "@/app/pages/Layout";
 import { requestInfo } from "rwsdk/worker";
 
 import { NewInvoiceButton } from "./components/NewInvoiceButton";
-import { db } from "@/db";
+import { db } from "@/db/db";
 
 import { link } from "@/app/shared/links";
 
@@ -28,21 +28,12 @@ export type InvoiceTaxes = {
 };
 
 async function getInvoiceListSummary(userId: string) {
-  return await db.invoice.findMany({
-    select: {
-      id: true,
-      number: true,
-      date: true,
-      status: true,
-      customer: true,
-    },
-    where: {
-      userId,
-    },
-    orderBy: {
-      date: "desc",
-    },
-  });
+  return await db
+    .selectFrom("Invoice")
+    .select(["id", "number", "date", "status", "customer"])
+    .where("userId", "=", userId)
+    .orderBy("date", "desc")
+    .execute();
 }
 
 export async function InvoiceListPage() {
@@ -87,11 +78,11 @@ function InvoiceListItem(
         <a href={link("/invoice/:id", { id: props.id })}>{props.number}</a>
       </TableCell>
       <TableCell>
-        {props.date.toLocaleDateString(undefined, {
+        {props.date ? new Date(props.date).toLocaleDateString(undefined, {
           year: "numeric",
           month: "long",
           day: "numeric",
-        })}
+        }) : ""}
       </TableCell>
       <TableCell>{props.customer ?? ""}</TableCell>
       <TableCell className="text-right">

@@ -1,13 +1,13 @@
 import { defineApp, ErrorResponse } from "rwsdk/worker";
 import { render, prefix, route } from "rwsdk/router";
 import { env } from "cloudflare:workers";
-import { Prisma } from "@prisma/client";
 
-import { db, setupDb } from "@/db";
+import { db } from "@/db/db";
 
 import { sessions, setupSessionStore } from "./session/store";
 import { Session } from "./session/durableObject";
 export { SessionDurableObject } from "./session/durableObject";
+export { AppDurableObject } from "./db/durableObject";
 
 import { link } from "@/app/shared/links";
 import { Document } from "@/app/Document";
@@ -18,12 +18,10 @@ import { invoiceRoutes } from "@/app/pages/invoice/routes";
 
 export type AppContext = {
   session: Session | null;
-  user: Prisma.UserGetPayload<{
-    select: {
-      id: true;
-      email: true;
-    };
-  }> | null;
+  user: {
+    id: string;
+    email: string;
+  } | null;
 };
 
 export const getUser = async (session: Session | null) => {
@@ -31,20 +29,15 @@ export const getUser = async (session: Session | null) => {
     return null;
   }
 
-  return await db.user.findUnique({
-    select: {
-      id: true,
-      email: true,
-    },
-    where: {
-      id: session?.userId,
-    },
-  });
+  return await db
+    .selectFrom("User")
+    .select(["id", "email"])
+    .where("id", "=", session.userId)
+    .executeTakeFirst() || null;
 };
 
 const app = defineApp([
   async ({ request, ctx, headers }) => {
-    await setupDb(env);
     setupSessionStore(env);
 
     try {

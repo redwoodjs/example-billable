@@ -2,7 +2,7 @@ import { index, route } from "rwsdk/router";
 import type { RequestInfo } from "rwsdk/worker";
 import { env } from "cloudflare:workers";
 
-import { db } from "@/db";
+import { db } from "@/db/db";
 
 import { InvoiceListPage } from "./ListPage/InvoiceListPage";
 import { InvoiceDetailPage } from "./DetailPage/InvoiceDetailPage";
@@ -52,12 +52,11 @@ export const invoiceRoutes = [
         },
       });
 
-      await db.invoice.update({
-        where: { id: params.id },
-        data: {
-          supplierLogo: r2ObjectKey,
-        },
-      });
+      await db
+        .updateTable("Invoice")
+        .set({ supplierLogo: r2ObjectKey })
+        .where("id", "=", params.id)
+        .execute();
 
       return new Response(JSON.stringify({ key: r2ObjectKey }), {
         status: 200,

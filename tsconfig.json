@@ -21,8 +21,7 @@
     ],
     /* Specify type roots for custom type definitions */
     "paths": {
-      "@/*": ["./src/*"],
-      ".prisma/*": ["./node_modules/.prisma/*"]
+      "@/*": ["./src/*"]
     },
     /* Enable importing .json files */
     "resolveJsonModule": true,

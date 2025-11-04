@@ -1,62 +1,88 @@
 "use server";
 
-import { type Invoice } from "@prisma/client";
-import { db } from "@/db";
+import { type Invoice as DbInvoice } from "@/db/db";
+import { db } from "@/db/db";
 import type {
   InvoiceItem,
   InvoiceLabels,
   InvoiceTaxes,
 } from "./InvoiceDetailPage";
+import type { Invoice as FormInvoice } from "./InvoiceForm";
 import { requestInfo } from "rwsdk/worker";
 
 export async function saveInvoice(
   id: string,
-  invoice: Omit<Invoice, "items" | "taxes" | "labels">,
+  invoice: Omit<FormInvoice, "items" | "taxes" | "labels">,
   labels: InvoiceLabels,
   items: InvoiceItem[],
   taxes: InvoiceTaxes[]
 ) {
   const { ctx } = requestInfo;
 
-  await db.invoice.findFirstOrThrow({
-    where: {
-      id,
-      userId: ctx?.user?.id,
-    },
-  });
+  const existingInvoice = await db
+    .selectFrom("Invoice")
+    .select(["id"])
+    .where("id", "=", id)
+    .where("userId", "=", ctx?.user?.id!)
+    .executeTakeFirst();
 
-  const data: Invoice = {
+  if (!existingInvoice) {
+    throw new Error("Invoice not found");
+  }
+
+  const data: DbInvoice = {
     ...invoice,
+    date: typeof invoice.date === "string" ? invoice.date : invoice.date.toISOString(),
+    createdAt: typeof invoice.createdAt === "string" ? invoice.createdAt : invoice.createdAt.toISOString(),
+    updatedAt: invoice.updatedAt ? (typeof invoice.updatedAt === "string" ? invoice.updatedAt : invoice.updatedAt.toISOString()) : null,
     items: JSON.stringify(items),
     taxes: JSON.stringify(taxes),
     labels: JSON.stringify(labels),
   };
 
-  await db.invoice.upsert({
-    create: data,
-    update: data,
-    where: {
-      id,
-    },
-  });
+  await db
+    .insertInto("Invoice")
+    .values(data)
+    .onConflict((oc) =>
+      oc.column("id").doUpdateSet({
+        title: data.title,
+        userId: data.userId,
+        number: data.number,
+        date: data.date,
+        status: data.status,
+        supplierLogo: data.supplierLogo,
+        supplierName: data.supplierName,
+        supplierContact: data.supplierContact,
+        customer: data.customer,
+        notesA: data.notesA,
+        notesB: data.notesB,
+        items: data.items,
+        taxes: data.taxes,
+        labels: data.labels,
+        currency: data.currency,
+        updatedAt: new Date().toISOString(),
+      })
+    )
+    .execute();
 }
 
 export async function deleteLogo(id: string) {
   const { ctx } = requestInfo;
 
-  await db.invoice.findFirstOrThrow({
-    where: {
-      id,
-      userId: ctx?.user?.id,
-    },
-  });
+  const existingInvoice = await db
+    .selectFrom("Invoice")
+    .select(["id"])
+    .where("id", "=", id)
+    .where("userId", "=", ctx?.user?.id!)
+    .executeTakeFirst();
 
-  await db.invoice.update({
-    data: {
-      supplierLogo: null,
-    },
-    where: {
-      id,
-    },
-  });
+  if (!existingInvoice) {
+    throw new Error("Invoice not found");
+  }
+
+  await db
+    .updateTable("Invoice")
+    .set({ supplierLogo: null })
+    .where("id", "=", id)
+    .execute();
 }

@@ -3,7 +3,7 @@
 import { type RequestInfo } from "rwsdk/worker";
 import { Layout } from "@/app/pages/Layout";
 import { Invoice, InvoiceForm } from "./InvoiceForm";
-import { db } from "@/db";
+import { db } from "@/db/db";
 import {
   BreadcrumbLink,
   BreadcrumbList,
@@ -71,12 +71,13 @@ async function getInvoice(id: string, userId: string) {
     };
   }
 
-  const invoice = await db.invoice.findFirstOrThrow({
-    where: {
-      id,
-      userId,
-    },
-  });
+  const invoice = await db
+    .selectFrom("Invoice")
+    .selectAll()
+    .where("id", "=", id)
+    .where("userId", "=", userId)
+    .executeTakeFirstOrThrow();
+
   return {
     ...invoice,
     items:
@@ -87,6 +88,9 @@ async function getInvoice(id: string, userId: string) {
       typeof invoice.taxes === "string"
         ? JSON.parse(invoice.taxes)
         : invoice.taxes,
+    date: invoice.date ? new Date(invoice.date) : new Date(),
+    createdAt: invoice.createdAt ? new Date(invoice.createdAt) : new Date(),
+    updatedAt: invoice.updatedAt ? new Date(invoice.updatedAt) : null,
   };
 }
 
