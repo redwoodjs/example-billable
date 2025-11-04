@@ -12,9 +12,11 @@ export function PrintPdf({
     pageStyle: `
       @page {
         margin: 0.5in;
+        size: letter;
       }
       @media print {
-        body {
+        html, body {
+          zoom: 100% !important;
           -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
         }
