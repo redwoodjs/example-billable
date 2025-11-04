@@ -6,7 +6,21 @@ export function PrintPdf({
 }: {
   contentRef: React.RefObject<HTMLDivElement>;
 }) {
-  const reactToPrintFn = useReactToPrint({ contentRef });
+  const reactToPrintFn = useReactToPrint({
+    contentRef,
+    documentTitle: "Invoice",
+    pageStyle: `
+      @page {
+        margin: 0.5in;
+      }
+      @media print {
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    `,
+  });
 
   return (
     <div>
