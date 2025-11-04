@@ -17,7 +17,6 @@ import { userRoutes } from "@/app/pages/user/routes";
 import { invoiceRoutes } from "@/app/pages/invoice/routes";
 
 export const sessionStore = defineDurableSession({
-  secretKey: env.SECRET_KEY,
   sessionDurableObject: env.SESSION_DURABLE_OBJECT,
 });
 
@@ -34,25 +33,27 @@ export const getUser = async (session: Session | null) => {
     return null;
   }
 
-  return await db
-    .selectFrom("User")
-    .select(["id", "email"])
-    .where("id", "=", session.userId)
-    .executeTakeFirst() || null;
+  return (
+    (await db
+      .selectFrom("User")
+      .select(["id", "email"])
+      .where("id", "=", session.userId)
+      .executeTakeFirst()) || null
+  );
 };
 
 const app = defineApp([
-  async ({ request, ctx, headers }) => {
+  async ({ request, ctx, response }) => {
     try {
       ctx.session = await sessionStore.load(request);
       ctx.user = await getUser(ctx.session);
     } catch (error) {
       if (error instanceof ErrorResponse && error.code === 401) {
-        await sessionStore.remove(request, headers);
-        headers.set("Location", "/user/login");
+        await sessionStore.remove(request, response.headers);
+        response.headers.set("Location", "/user/login");
         return new Response(null, {
           status: 302,
-          headers,
+          headers: response.headers,
         });
       }
     }
