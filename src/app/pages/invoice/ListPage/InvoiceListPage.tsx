@@ -40,8 +40,6 @@ export async function InvoiceListPage() {
   const user = requestInfo.ctx.user!;
   const invoices = await getInvoiceListSummary(user.id);
 
-  console.log(invoices);
-
   return (
     <Layout>
       <div className="space-y-2 py-4 text-right">
@@ -78,11 +76,13 @@ function InvoiceListItem(
         <a href={link("/invoice/:id", { id: props.id })}>{props.number}</a>
       </TableCell>
       <TableCell>
-        {props.date ? new Date(props.date).toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }) : ""}
+        {props.date
+          ? new Date(props.date).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : ""}
       </TableCell>
       <TableCell>{props.customer ?? ""}</TableCell>
       <TableCell className="text-right">
