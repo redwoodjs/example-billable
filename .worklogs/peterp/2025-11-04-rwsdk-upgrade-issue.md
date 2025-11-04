@@ -55,6 +55,13 @@ During the "Linking worker build" phase, Rollup fails to resolve:
 
 This appears to be a Prisma bundling issue with Cloudflare Workers. The Prisma client needs to be properly bundled or externalized during the linking phase.
 
+## Additional Fixes
+
+**Updated `wrangler.jsonc` compatibility_date:**
+- Changed from `2024-09-23` to `2025-08-21` (matching starter template)
+- This fixes the `WeakRef is not defined` runtime error in dev mode
+- `WeakRef` support requires a newer compatibility date
+
 ## Dependencies Updated
 
 - `rwsdk`: `0.1.0-alpha.2` → `^1.0.0-beta.24`
@@ -64,3 +71,8 @@ This appears to be a Prisma bundling issue with Cloudflare Workers. The Prisma c
 - `vite`: `^6.1.1` → `^6.2.6`
 - `wrangler`: `^4.14.1` → `^4.45.3`
 - `@cloudflare/vite-plugin`: Added `^1.13.18`
+
+## Configuration Files Updated
+
+1. **vite.config.mts**: Added Cloudflare plugin with proper configuration
+2. **wrangler.jsonc**: Updated compatibility_date to `2025-08-21`
