@@ -1,11 +1,6 @@
 {
-  // Schema reference
   "$schema": "node_modules/wrangler/config-schema.json",
-
-  // Worker name
   "name": "billable",
-
-  // Entry point
   "main": "src/worker.tsx",
   "placement": {
     "mode": "smart"
@@ -16,22 +11,14 @@
       "custom_domain": true
     }
   ],
-
-  // Compatibility settings
   "compatibility_date": "2025-08-21",
   "compatibility_flags": ["nodejs_compat"],
-
-  // Assets configuration
   "assets": {
     "binding": "ASSETS"
   },
-
-  // Observability settings
   "observability": {
     "enabled": true
   },
-
-  // Durable Objects configuration
   "durable_objects": {
     "bindings": [
       {
@@ -44,21 +31,18 @@
       }
     ]
   },
-
-  // Environment variables
   "vars": {
     "APP_URL": "https://billable.me",
-    "APP_NAME": "billable"
+    "APP_NAME": "billable",
+    "WEBAUTHN_APP_NAME": "billable"
   },
-
-  // Migrations configuration
   "migrations": [
     {
-      "tag": "v1",
-      "new_sqlite_classes": ["SessionDurableObject", "AppDurableObject"]
+      "tag": "v2",
+      "new_classes": ["SessionDurableObject"],
+      "new_sqlite_classes": ["AppDurableObject"]
     }
   ],
-
   "r2_buckets": [
     {
       "binding": "R2",
