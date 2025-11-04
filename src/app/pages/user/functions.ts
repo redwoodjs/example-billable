@@ -101,8 +101,6 @@ export async function finishPasskeyRegistration(
     return false;
   }
 
-  await sessionStore.save(headers, { challenge: null });
-
   const userId = crypto.randomUUID();
   const now = new Date().toISOString();
 
@@ -126,6 +124,11 @@ export async function finishPasskeyRegistration(
       createdAt: now,
     })
     .execute();
+
+  await sessionStore.save(headers, {
+    userId,
+    challenge: null,
+  });
 
   return true;
 }
