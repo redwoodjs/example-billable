@@ -1,10 +1,10 @@
 import { defineApp, ErrorResponse } from "rwsdk/worker";
 import { render, prefix, route } from "rwsdk/router";
 import { env } from "cloudflare:workers";
+import { defineDurableSession } from "rwsdk/auth";
 
 import { db } from "@/db/db";
 
-import { sessions, setupSessionStore } from "./session/store";
 import { Session } from "./session/durableObject";
 export { SessionDurableObject } from "./session/durableObject";
 export { AppDurableObject } from "./db/durableObject";
@@ -15,6 +15,11 @@ import { HomePage } from "@/app/pages/Home";
 
 import { userRoutes } from "@/app/pages/user/routes";
 import { invoiceRoutes } from "@/app/pages/invoice/routes";
+
+export const sessionStore = defineDurableSession({
+  secretKey: env.SECRET_KEY,
+  sessionDurableObject: env.SESSION_DURABLE_OBJECT,
+});
 
 export type AppContext = {
   session: Session | null;
@@ -38,14 +43,12 @@ export const getUser = async (session: Session | null) => {
 
 const app = defineApp([
   async ({ request, ctx, headers }) => {
-    setupSessionStore(env);
-
     try {
-      ctx.session = await sessions.load(request);
+      ctx.session = await sessionStore.load(request);
       ctx.user = await getUser(ctx.session);
     } catch (error) {
       if (error instanceof ErrorResponse && error.code === 401) {
-        await sessions.remove(request, headers);
+        await sessionStore.remove(request, headers);
         headers.set("Location", "/user/login");
         return new Response(null, {
           status: 302,

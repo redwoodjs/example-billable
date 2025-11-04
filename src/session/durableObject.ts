@@ -8,47 +8,47 @@ export interface Session {
 }
 
 export class SessionDurableObject extends DurableObject {
+  private storage: DurableObjectStorage;
   private session: Session | undefined = undefined;
+
   constructor(state: DurableObjectState, env: Env) {
     super(state, env);
+    this.storage = state.storage;
     this.session = undefined;
   }
 
-  async saveSession({
-    userId = null,
-    challenge = null,
-  }: {
-    userId?: string | null;
-    challenge?: string | null;
-  }): Promise<Session> {
+  async saveSession(data: Partial<Session>): Promise<Session> {
+    const existing =
+      this.session ?? (await this.storage.get<Session>("session"));
+
     const session: Session = {
-      userId,
-      challenge,
-      createdAt: Date.now(),
+      userId: data.userId ?? existing?.userId ?? null,
+      challenge: data.challenge ?? existing?.challenge ?? null,
+      createdAt: existing?.createdAt ?? Date.now(),
     };
 
-    await this.ctx.storage.put<Session>("session", session);
+    await this.storage.put<Session>("session", session);
     this.session = session;
     return session;
   }
 
-  async getSession(): Promise<{ value: Session } | { error: string }> {
+  async getSession(): Promise<{ value: Session }> {
     if (this.session) {
       return { value: this.session };
     }
 
-    const session = await this.ctx.storage.get<Session>("session");
+    const session = await this.storage.get<Session>("session");
 
     if (!session) {
       return {
-        error: "Invalid session",
+        value: { userId: null, challenge: null, createdAt: Date.now() },
       };
     }
 
     if (session.createdAt + MAX_SESSION_DURATION < Date.now()) {
       await this.revokeSession();
       return {
-        error: "Session expired",
+        value: { userId: null, challenge: null, createdAt: Date.now() },
       };
     }
 
@@ -57,7 +57,7 @@ export class SessionDurableObject extends DurableObject {
   }
 
   async revokeSession() {
-    await this.ctx.storage.delete("session");
+    await this.storage.delete("session");
     this.session = undefined;
   }
 }

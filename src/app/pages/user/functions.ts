@@ -11,7 +11,7 @@ import {
   AuthenticationResponseJSON,
 } from "@simplewebauthn/server";
 
-import { sessions } from "@/session/store";
+import { sessionStore } from "@/worker";
 import { requestInfo } from "rwsdk/worker";
 import { db } from "@/db/db";
 
@@ -41,7 +41,7 @@ function getWebAuthnConfig(request: Request) {
 
 export async function startPasskeyRegistration(username: string) {
   const { rpName, rpID } = getWebAuthnConfig(requestInfo.request);
-  const { headers } = requestInfo;
+  const { headers } = requestInfo.response;
 
   const options = await generateRegistrationOptions({
     rpName,
@@ -55,14 +55,14 @@ export async function startPasskeyRegistration(username: string) {
     },
   });
 
-  await sessions.save(headers, { challenge: options.challenge });
+  await sessionStore.save(headers, { challenge: options.challenge });
 
   return options;
 }
 
 export async function startPasskeyLogin() {
   const { rpID } = getWebAuthnConfig(requestInfo.request);
-  const { headers } = requestInfo;
+  const { headers } = requestInfo.response;
 
   const options = await generateAuthenticationOptions({
     rpID,
@@ -70,7 +70,7 @@ export async function startPasskeyLogin() {
     allowCredentials: [],
   });
 
-  await sessions.save(headers, { challenge: options.challenge });
+  await sessionStore.save(headers, { challenge: options.challenge });
 
   return options;
 }
@@ -79,10 +79,11 @@ export async function finishPasskeyRegistration(
   email: string,
   registration: RegistrationResponseJSON
 ) {
-  const { request, headers } = requestInfo;
+  const { request } = requestInfo;
+  const { headers } = requestInfo.response;
   const { origin } = new URL(request.url);
 
-  const session = await sessions.load(request);
+  const session = await sessionStore.load(request);
   const challenge = session?.challenge;
 
   if (!challenge) {
@@ -100,7 +101,7 @@ export async function finishPasskeyRegistration(
     return false;
   }
 
-  await sessions.save(headers, { challenge: null });
+  await sessionStore.save(headers, { challenge: null });
 
   const userId = crypto.randomUUID();
   const now = new Date().toISOString();
@@ -130,10 +131,11 @@ export async function finishPasskeyRegistration(
 }
 
 export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
-  const { request, headers } = requestInfo;
+  const { request } = requestInfo;
+  const { headers } = requestInfo.response;
   const { origin } = new URL(request.url);
 
-  const session = await sessions.load(request);
+  const session = await sessionStore.load(request);
   const challenge = session?.challenge;
 
   if (!challenge) {
@@ -183,7 +185,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
     return false;
   }
 
-  await sessions.save(headers, {
+  await sessionStore.save(headers, {
     userId: user.id,
     challenge: null,
   });
