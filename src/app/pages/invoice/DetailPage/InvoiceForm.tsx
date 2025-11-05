@@ -553,7 +553,7 @@ function SupplierName({
         <img
           src={invoice.supplierLogo}
           alt={invoice.supplierName ?? "Logo"}
-          className="max-w-100"
+          className="max-w-xs max-h-32 object-contain"
         />
         <div className="flex p-2 print:hidden">
           <Button
