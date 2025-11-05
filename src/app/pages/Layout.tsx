@@ -42,7 +42,7 @@ function Header({ user }: { user?: RequestInfo["ctx"]["user"] }) {
   );
 }
 
-export function Layout({ children }) {
+export function Layout({ children }: { children: React.ReactNode }) {
   const user = requestInfo.ctx?.user;
 
   return (
@@ -54,8 +54,20 @@ export function Layout({ children }) {
       </main>
 
       <div className="px-8 py-4 border-t">
-        Crafted with{" "}
-        <a href="https://rwsdk.com/personal-software">RedwoodSDK</a>
+        <a
+          href="https://github.com/redwoodjs/example-billable"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          Host your own. Crafted with{" "}
+          <img
+            src="https://imagedelivery.net/EBSSfnGYYD9-tGTmYMjDgg/37162c6c-890c-48e3-790a-48b2b87fcd00/public"
+            alt="RedwoodSDK"
+            className="h-3.5 w-auto inline-block align-middle"
+          />
+          .
+        </a>
       </div>
     </div>
   );
