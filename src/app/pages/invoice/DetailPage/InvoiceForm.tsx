@@ -401,6 +401,19 @@ export function InvoiceForm(props: {
   );
 }
 
+function stripNonNumeric(value: string): string {
+  return value.replace(/[^0-9.-]/g, "");
+}
+
+function parseNumber(value: string, currentValue: number): number {
+  const cleaned = stripNonNumeric(value);
+  if (cleaned === "") {
+    return currentValue;
+  }
+  const parsed = parseFloat(cleaned);
+  return isNaN(parsed) ? currentValue : parsed;
+}
+
 function Item({
   item,
   onChange,
@@ -421,9 +434,13 @@ function Item({
       </div>
       <div className="col-span-2 border-r">
         <Input
+          type="number"
           value={item.quantity}
           onChange={(e) =>
-            onChange({ ...item, quantity: Number(e.target.value) })
+            onChange({
+              ...item,
+              quantity: parseNumber(e.target.value, item.quantity),
+            })
           }
         />
       </div>
@@ -431,7 +448,12 @@ function Item({
         <Input
           type="number"
           value={item.price}
-          onChange={(e) => onChange({ ...item, price: Number(e.target.value) })}
+          onChange={(e) =>
+            onChange({
+              ...item,
+              price: parseNumber(e.target.value, item.price),
+            })
+          }
         />
       </div>
       <div className="col-span-1 flex items-start justify-end">
@@ -478,7 +500,10 @@ function Taxes(props: {
               value={Math.floor(tax.amount * 100)}
               onChange={(e) =>
                 props.onChange(
-                  { ...tax, amount: Number(e.target.value) / 100 },
+                  {
+                    ...tax,
+                    amount: parseNumber(e.target.value, tax.amount * 100) / 100,
+                  },
                   index
                 )
               }
