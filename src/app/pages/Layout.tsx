@@ -60,13 +60,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
         >
-          Host your own. Crafted with{" "}
+          Host your own.
+        </a>
+        <a href="https://rwsdk.com" target="_blank" rel="noopener noreferrer">
+          {" "}
+          Crafted with{" "}
           <img
             src="https://imagedelivery.net/EBSSfnGYYD9-tGTmYMjDgg/37162c6c-890c-48e3-790a-48b2b87fcd00/public"
             alt="RedwoodSDK"
             className="h-3.5 w-auto inline-block align-middle"
           />
-          .
         </a>
       </div>
     </div>
