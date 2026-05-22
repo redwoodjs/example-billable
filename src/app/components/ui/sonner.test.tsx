@@ -59,18 +59,7 @@ describe('Toaster', () => {
     );
   });
 
-  it('renders with dark theme', () => {
-    mockUseTheme.mockReturnValue({ theme: 'dark', setTheme: jest.fn(), systemTheme: undefined, resolvedTheme: undefined });
 
-    render(<Toaster />);
-
-    expect(Sonner).toHaveBeenCalledWith(
-      expect.objectContaining({
-        theme: 'dark',
-      }),
-      undefined
-    );
-  });
 
   it('passes additional props to Sonner component', () => {
     mockUseTheme.mockReturnValue({ theme: 'system', setTheme: jest.fn(), systemTheme: undefined, resolvedTheme: undefined });

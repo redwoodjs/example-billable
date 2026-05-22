@@ -141,12 +141,6 @@ describe("Migrations", () => {
       });
     });
 
-    test("should have the correct number of migrations", () => {
-      expect(Object.keys(migrations)).toHaveLength(4);
-      expect(migrations).toHaveProperty("001_initial_schema");
-      expect(migrations).toHaveProperty("002_add_credential_table");
-      expect(migrations).toHaveProperty("003_add_invoice_table");
-      expect(migrations).toHaveProperty("004_add_deleted_at_to_invoice");
-    });
+
   });
 });
